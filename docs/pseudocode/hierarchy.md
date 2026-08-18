@@ -26,8 +26,9 @@ are this topic's functions. They are not other topics.
 
 Lua call this ticket:
 `bearing_turret.aim_turret_at_target(opts)`. `opts` is a table of
-ainterface input keys. `yaw_degrees` and `pitch_degrees` are
-required. Success is no return values.
+ainterface input keys. `yaw_degrees`, `pitch_degrees`,
+`yaw_rpm`, and `pitch_rpm` are required. Success is one table
+(`on_target`).
 
 ## bearing_turret.engage_simulated_bearing_turret
 

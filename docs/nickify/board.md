@@ -12,11 +12,11 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Vestibule
 
-- #6 Aim Turret At Target
+(none)
 
 ## Docs
 
-(none)
+- #6 Aim Turret At Target
 
 ## Docs
 
