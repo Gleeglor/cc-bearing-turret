@@ -15,11 +15,11 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Docs
 
-- #8 Engage Simulated Bearing Turret (parent, high-level)
+(none)
 
 ## Code
 
-(none)
+- #8 Engage Simulated Bearing Turret (parent, high-level)
 
 ## Tests
 
