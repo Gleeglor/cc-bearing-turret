@@ -8,7 +8,6 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 ## Backlog
 
 - #7 Compute Ballistic Aim
-- #6 Aim Turret At Target
 
 ## Vestibule
 
@@ -41,3 +40,4 @@ GitHub Project board - token lacks `project` / `read:project`
 - #3 Set Electric Motor Speed (merged PR 11, SHA a4a345c)
 - #4 Fire Rotating Barrel (merged PR 12, SHA 890d580)
 - #5 Rotate Bearing Toward Angle (merged PR 13, SHA c56a3cf)
+- #6 Aim Turret At Target (merged PR 14, SHA cbe8175)

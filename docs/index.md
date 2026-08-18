@@ -22,5 +22,7 @@ use Going Ballistic physics.
 - [Research 4 Paper](/research/4/paper)
 - [Research 5 Overview](/research/5/overview)
 - [Research 5 Paper](/research/5/paper)
+- [Research 6 Overview](/research/6/overview)
+- [Research 6 Paper](/research/6/paper)
 - [Research 8 Overview](/research/8/overview)
 - [Research 8 Paper](/research/8/paper)

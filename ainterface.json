@@ -82,6 +82,33 @@
       }
     },
     {
+      "name": "aim_turret_at_target",
+      "who": "ComputerCraft program on the gun computer",
+      "what": "confirm a live radar target this tick and drive yaw and pitch Simulated swivel bearings to caller-supplied ballistic degrees",
+      "when": "a firing solution exists and a Create Radar dish is attached",
+      "where": "Amazeballs world; kinetic motors on Simulated yaw and pitch swivel bearings",
+      "why": "Create Radar yaw and pitch controllers drive cannon mounts, not this Lua path; this command aims bearings at a solution and does not compute Going Ballistic physics",
+      "call": "Lua bearing_turret.aim_turret_at_target(opts); opts is a table; success is one Lua table with boolean on_target",
+      "inputs": {
+        "yaw_degrees": "required finite Lua number; bearing-local degrees for the yaw swivel; from the caller (compute_ballistic_aim)",
+        "pitch_degrees": "required finite Lua number; bearing-local degrees for the pitch swivel; from the caller (compute_ballistic_aim)",
+        "yaw_rpm": "required finite Lua number; forwarded as rotate_bearing_toward_angle rpm on the yaw call; sign increases the yaw bearing stored servo field; polarities may differ from pitch; do not invent or default",
+        "pitch_rpm": "required finite Lua number; forwarded as rotate_bearing_toward_angle rpm on the pitch call; sign increases the pitch bearing stored servo field",
+        "track_id": "optional string on the Lua opts table; live radar track id to require this tick; omit key, nil, or empty string to use the monitor selectedTrackId from read_radar_tracks",
+        "radar_name": "optional string on the Lua opts table; forwarded to read_radar_tracks",
+        "monitor_name": "optional string on the Lua opts table; forwarded to read_radar_tracks",
+        "yaw_bearing_name": "optional string on the Lua opts table; forwarded to rotate_bearing_toward_angle for the yaw axis",
+        "pitch_bearing_name": "optional string on the Lua opts table; forwarded to rotate_bearing_toward_angle for the pitch axis",
+        "yaw_motor_name": "optional string on the Lua opts table; forwarded to rotate_bearing_toward_angle for the yaw axis",
+        "pitch_motor_name": "optional string on the Lua opts table; forwarded to rotate_bearing_toward_angle for the pitch axis",
+        "yaw_tolerance_degrees": "optional finite Lua number; forwarded as rotate_bearing_toward_angle tolerance_degrees on the yaw call; omit key, nil, or absent means that call omits the key and rotate defaults to 1",
+        "pitch_tolerance_degrees": "optional finite Lua number; forwarded as rotate_bearing_toward_angle tolerance_degrees on the pitch call; omit key, nil, or absent means that call omits the key and rotate defaults to 1"
+      },
+      "outputs": {
+        "on_target": "boolean; true iff both axes are on target this invocation (abs of each rotate error_degrees is less than or equal to that axis resolved tolerance); false is still success of this command; Engage fires only when true"
+      }
+    },
+    {
       "name": "engage_simulated_bearing_turret",
       "who": "ComputerCraft program on the gun computer",
       "what": "one engagement step: compute a ballistic solution from the selected radar track, aim the Simulated yaw and pitch bearings at that solution, and fire the rotating barrel only when aim reports the gun is on target",
