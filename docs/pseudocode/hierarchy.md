@@ -17,17 +17,16 @@ split this tree into sibling repos.
 Leaves are ainterface commands. On `ainterface.json` now:
 `bearing_turret.read_radar_tracks`,
 `bearing_turret.read_swivel_bearing_angle`,
-`bearing_turret.set_electric_motor_speed`, and
-`bearing_turret.fire_rotating_barrel`. Other basic leaves
-join the contract when their tickets enter the Vestibule.
-Non-leaf names are this topic's functions. They are not other
-topics. They join the ainterface when their own tickets enter the
-Vestibule.
+`bearing_turret.set_electric_motor_speed`,
+`bearing_turret.fire_rotating_barrel`, and
+`bearing_turret.rotate_bearing_toward_angle`. Other names join the
+contract when their tickets enter the Vestibule. Non-leaf names
+are this topic's functions. They are not other topics.
 
 Lua call this ticket:
-`bearing_turret.fire_rotating_barrel(opts)`. `opts` is a table of
-ainterface input keys. `side` is required. Success is no return
-values.
+`bearing_turret.rotate_bearing_toward_angle(opts)`. `opts` is a
+table of ainterface input keys. `target_degrees` and `rpm` are
+required. Success is one Lua number, signed shortest-path error.
 
 ## bearing_turret.engage_simulated_bearing_turret
 
@@ -110,7 +109,12 @@ path.
 ## bearing_turret.rotate_bearing_toward_angle
 
 [#5](https://github.com/Gleeglor/cc-bearing-turret/issues/5).
-Advanced. No research page yet.
+Advanced. On the ainterface this ticket.
+
+- [Functional](/functions/advanced/rotate-bearing-toward-angle)
+- [Technical](/functions/advanced/rotate-bearing-toward-angle.technical)
+- [Overview](/research/5/overview)
+- [Paper](/research/5/paper)
 
 ### Who
 

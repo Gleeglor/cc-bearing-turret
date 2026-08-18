@@ -35,6 +35,8 @@ export default defineConfig({
           { text: "3 Paper", link: "/research/3/paper" },
           { text: "4 Overview", link: "/research/4/overview" },
           { text: "4 Paper", link: "/research/4/paper" },
+          { text: "5 Overview", link: "/research/5/overview" },
+          { text: "5 Paper", link: "/research/5/paper" },
         ],
       },
       {
@@ -69,6 +71,14 @@ export default defineConfig({
           {
             text: "Fire Rotating Barrel Technical",
             link: "/functions/basic/fire-rotating-barrel.technical",
+          },
+          {
+            text: "Rotate Bearing Toward Angle",
+            link: "/functions/advanced/rotate-bearing-toward-angle",
+          },
+          {
+            text: "Rotate Bearing Toward Angle Technical",
+            link: "/functions/advanced/rotate-bearing-toward-angle.technical",
           },
         ],
       },

@@ -10,7 +10,6 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 - #8 Engage Simulated Bearing Turret (parent, high-level)
 - #7 Compute Ballistic Aim
 - #6 Aim Turret At Target
-- #5 Rotate Bearing Toward Angle
 
 ## Vestibule
 
@@ -31,6 +30,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 ## Compare
 
 - #4 Fire Rotating Barrel
+- #5 Rotate Bearing Toward Angle
 
 ## Blocked
 
