@@ -47,6 +47,27 @@
         "rpm": "required finite Lua number; passed to setSpeed as a number; Java clamps to configured RPM range"
       },
       "outputs": {}
+    },
+    {
+      "name": "engage_simulated_bearing_turret",
+      "who": "ComputerCraft program on the gun computer",
+      "what": "one engagement step: compute a ballistic solution from the selected radar track, aim the Simulated yaw and pitch bearings at that solution, and fire the rotating barrel only when aim reports the gun is on target",
+      "when": "radar, yaw and pitch bearings, their motors, and the barrel fire path are attached; the operator wants one engagement step",
+      "where": "Amazeballs world, ComputerCraft on the gun computer",
+      "why": "Create Radar yaw and pitch controllers drive CBC mounts, not Simulated swivel bearings; Going Ballistic has no ComputerCraft API; this script is the product act that composes those gaps",
+      "call": "Lua bearing_turret.engage_simulated_bearing_turret(opts); opts is a table; success is one table",
+      "inputs": {
+        "radar_name": "optional string on the Lua opts table; omit key, nil, or empty string to discover; forwarded to children that list this key",
+        "monitor_name": "optional string on the Lua opts table; omit key, nil, or empty string to discover; forwarded to children that list this key",
+        "yaw_bearing_name": "required string; Simulated swivel for yaw; forwarded to aim_turret_at_target under the name that command lists",
+        "pitch_bearing_name": "required string; Simulated swivel for pitch; forwarded to aim_turret_at_target under the name that command lists",
+        "yaw_motor_name": "required string; electric motor on the yaw bearing; forwarded to aim_turret_at_target under the name that command lists",
+        "pitch_motor_name": "required string; electric motor on the pitch bearing; forwarded to aim_turret_at_target under the name that command lists"
+      },
+      "outputs": {
+        "fired": "boolean; true only when fire_rotating_barrel ran this step",
+        "on_target": "boolean; true when aim_turret_at_target reported the gun on the solution this step"
+      }
     }
   ]
 }

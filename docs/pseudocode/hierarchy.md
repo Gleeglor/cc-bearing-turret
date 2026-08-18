@@ -24,14 +24,17 @@ topics. They join the ainterface when their own tickets enter the
 Vestibule.
 
 Lua call this ticket:
-`bearing_turret.set_electric_motor_speed(opts)`. `opts` is a
-table of ainterface input keys. `rpm` is required. Success is no
-return values.
+`bearing_turret.engage_simulated_bearing_turret(opts)`. `opts` is
+a table of ainterface input keys. Axis bearing and motor names
+are required. Success is one table (`on_target`, `fired`).
 
 ## bearing_turret.engage_simulated_bearing_turret
 
 Parent [#8](https://github.com/Gleeglor/cc-bearing-turret/issues/8).
-High-level specialized script. No research page yet.
+High-level specialized script.
+
+- [Overview](/research/8/overview)
+- [Paper](/research/8/paper)
 
 ### Who
 
