@@ -19,16 +19,16 @@ Leaves are ainterface commands. On `ainterface.json` now:
 `bearing_turret.read_swivel_bearing_angle`,
 `bearing_turret.set_electric_motor_speed`,
 `bearing_turret.fire_rotating_barrel`,
-`bearing_turret.rotate_bearing_toward_angle`, and
+`bearing_turret.rotate_bearing_toward_angle`,
+`bearing_turret.compute_ballistic_aim`, and
 `bearing_turret.aim_turret_at_target`. Other names join the
 contract when their tickets enter the Vestibule. Non-leaf names
 are this topic's functions. They are not other topics.
 
 Lua call this ticket:
-`bearing_turret.aim_turret_at_target(opts)`. `opts` is a table of
-ainterface input keys. `yaw_degrees`, `pitch_degrees`,
-`yaw_rpm`, and `pitch_rpm` are required. Success is one table
-(`on_target`).
+`bearing_turret.compute_ballistic_aim(opts)`. `opts` is a table
+of ainterface input keys. Success is one table of yaw, pitch,
+time of flight, muzzle speed, impact point, and trajectory name.
 
 ## bearing_turret.engage_simulated_bearing_turret
 
@@ -60,7 +60,12 @@ bearings.
 ## bearing_turret.compute_ballistic_aim
 
 [#7](https://github.com/Gleeglor/cc-bearing-turret/issues/7).
-Advanced. No research page yet.
+Advanced. On the ainterface this ticket.
+
+- [Overview](/research/7/overview)
+- [Paper](/research/7/paper)
+- [Functional](/functions/advanced/compute-ballistic-aim)
+- [Technical](/functions/advanced/compute-ballistic-aim.technical)
 
 ### Who
 
