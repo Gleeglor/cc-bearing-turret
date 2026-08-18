@@ -82,6 +82,14 @@ export default defineConfig({
             text: "Rotate Bearing Toward Angle Technical",
             link: "/functions/advanced/rotate-bearing-toward-angle.technical",
           },
+          {
+            text: "Aim Turret At Target",
+            link: "/functions/advanced/aim-turret-at-target",
+          },
+          {
+            text: "Aim Turret At Target Technical",
+            link: "/functions/advanced/aim-turret-at-target.technical",
+          },
         ],
       },
     ],

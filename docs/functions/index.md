@@ -28,6 +28,10 @@ turret. Product features stay out of this catalog.
   - one closed-loop step: read one stored swivel target, command one
   motor toward a commanded angle, return signed shortest-path error
   (`bearing_turret.rotate_bearing_toward_angle`)
+- [Aim Turret At Target](/functions/advanced/aim-turret-at-target) -
+  confirm a live radar target this tick and drive yaw and pitch
+  Simulated swivel bearings to caller-supplied ballistic degrees
+  (`bearing_turret.aim_turret_at_target`)
 
 ## High-level
 

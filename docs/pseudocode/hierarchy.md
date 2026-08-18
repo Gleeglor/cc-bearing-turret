@@ -88,6 +88,8 @@ Advanced.
 
 - [Overview](/research/6/overview)
 - [Paper](/research/6/paper)
+- [Functional](/functions/advanced/aim-turret-at-target)
+- [Technical](/functions/advanced/aim-turret-at-target.technical)
 
 ### Who
 
