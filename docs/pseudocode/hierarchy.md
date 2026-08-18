@@ -198,6 +198,8 @@ Closed-loop rotate needs the angle. Native wrap is read-only.
 [#3](https://github.com/Gleeglor/cc-bearing-turret/issues/3).
 Basic. On the ainterface this ticket.
 
+- [Functional](/functions/basic/set-electric-motor-speed)
+- [Technical](/functions/basic/set-electric-motor-speed.technical)
 - [Overview](/research/3/overview)
 - [Paper](/research/3/paper)
 

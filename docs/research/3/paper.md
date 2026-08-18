@@ -55,61 +55,172 @@ The Java is the contract for "will it trip."
 
 ### Skip Same Speed, Then `setSpeed`
 
-`setSpeed` is `mainThread`. It no-ops when `(float) rpm == getSpeed()`.
-`getSpeed` returns `motorSpeed` (`float`). Requested RPM is a Lua
-number passed as Java `double`, then compared as float.
+Create Addition `1.21.1` `ElectricMotorPeripheral` marks both
+`getSpeed` and `setSpeed` `@LuaFunction(mainThread = true)`. CC:
+Tweaked runs those methods through
+`ILuaContext.executeMainThreadTask`: the computer waits for the
+next server tick. `getType` is the motor method that is not
+main-thread.
+
+After wrap and a finite `rpm`, this command always calls `getSpeed`
+from Lua. That yield is in-contract on every such call, including
+the equal-speed skip. Envelope, unknown-key, `rpm`-type, and
+discovery failures never reach `getSpeed` and take no `getSpeed`
+yield.
+
+`getSpeed` calls `getRPM()`, which returns the commanded field
+`motorSpeed` as Java `float`. Kinetic output is
+`getGeneratedSpeed()`: when `active` is false that value is 0
+(then FACING conversion). `tick()` clears `active` when stored
+energy cannot cover consumption, or when the block state `POWERED`
+is true. `setRPM` does not consult energy or `POWERED` and still
+returns true on this pack. An unpowered motor or a redstone-stopped
+motor still takes skip / `setSpeed`. Skip compares the request to
+`motorSpeed`, so a stopped shaft whose command already matches
+still skips. This Lua function does not read energy, `POWERED`, or
+generated speed. Success means the command was skipped or
+`setSpeed` returned. The shaft may remain 0.
 
 Lua: wrap `electric_motor`. Optional `motor_name`, required `rpm`.
 Discover exactly one motor when the name is omitted (same rule as
 tickets 1 and 2). The gun has two aim motors; pass names.
 
-Call `getSpeed`. If it equals the requested RPM as Lua numbers after
-both are numbers, skip `setSpeed`. Then `pcall` `setSpeed`. Success:
-no return values. If the dead anti-spam throw ever fires (overlay or
-fork), fail loud with that message. Do not sleep-and-retry. Any
-other throw fails loud.
+Requested RPM is a Lua number (double). Skip predicate: after
+`getSpeed` type-checks as a finite Lua number, skip `setSpeed`
+only when that number `== rpm`. That is the whole predicate. No
+conversion, no epsilon, no clamp of either side, no wait for the
+motor tick, no `string.pack` / `string.unpack` narrowing to IEEE
+754 binary32.
 
-Do not clamp in Lua. `setRPM` clamps to
-`[-ELECTRIC_MOTOR_RPM_RANGE, ELECTRIC_MOTOR_RPM_RANGE]` (docs still
-say 256). A non-number, NaN, or infinity fails loud before the
-peripheral.
+Always write (call `setSpeed`) when Lua `==` misses, including:
 
-Do not call `stop` as a special case; `rpm` 0 is `setSpeed(0)`.
-Do not call `rotate` or `translate`. Do not wrap `servo_motor`
-(a different 1.21.1 peripheral).
+- Delay. `ElectricMotorPeripheral.setSpeed` returns early when
+  `(float) rpm == getSpeed()`. Otherwise it calls
+  `setRPM((float) rpm)`. `ElectricMotorBlockEntity.setRPM` clamps
+  to `[-ELECTRIC_MOTOR_RPM_RANGE, ELECTRIC_MOTOR_RPM_RANGE]`,
+  stores that float in `cc_new_rpm`, sets `cc_update_rpm = true`,
+  and returns `true`. It does not assign `motorSpeed`. `getSpeed`
+  reads applied RPM (`motorSpeed`) only. The next `tick()` (every
+  game tick; not `lazyTick`) copies `cc_new_rpm` into `motorSpeed`
+  and `generatedSpeed`, then `updateGeneratedRotation()`. Until
+  that `tick()`, `getSpeed` is the previous speed. A later call
+  with the same `rpm` before that `tick()` may call `setSpeed`
+  again. That extra write is in-contract. This function does not
+  store last requested RPM. Java `(float) rpm == getSpeed()` then
+  return has the same hole. Lua cannot lean on that no-op to
+  coalesce pending requests.
+- Clamp. Lua does not clamp. After an out-of-range write,
+  `getSpeed` is the clamped `motorSpeed`, not the request. A
+  repeated out-of-range `rpm` is not Lua-equal to that value, so
+  every such call reaches `setSpeed`. Java's early return
+  `(float) rpm == getSpeed()` has the same hole. Do not remember
+  the last request and skip from that. A scroll, another computer,
+  or a later `setSpeed` from `rotate` / `translate` can change
+  `motorSpeed` while the remembered request stays out-of-range;
+  skipping would leave the motor where it is. Do not clamp in Lua
+  and then compare. The wrap has no max-RPM method. Hard-coding
+  256 from `COMPUTERCRAFT.md` invents a second limit the block
+  entity already owns. Config can differ. Those always-write
+  out-of-range calls are not a Lua failure.
+- Float mismatch. `getSpeed` is a Java `float` in Lua. `rpm` is a
+  Lua number (double). Java's no-op is
+  `(float) rpm == getSpeed()`. Those can disagree. Lua miss still
+  calls `setSpeed`. Java may then no-op. That is in-contract. This
+  command does not narrow `rpm` through `string.pack("f")` to
+  match the JVM `(float)` cast.
 
-Skipping an equal speed is how this command avoids the documented
-rate-limit throw: that throw only existed for distinct writes, and
-on this pack it cannot fire. Equal-speed skip still avoids a useless
-main-thread write.
+Then `pcall` `setSpeed` with the original `rpm` on a miss: fail
+loud on throw, no sleep-and-retry, no Lua clamp. A non-number,
+NaN, or infinity fails loud before the peripheral.
+
+This command does not wait for the applying `tick()`. It does not
+re-read `getSpeed` after `setSpeed`. It does not `sleep` until
+they match. A caller that `getSpeed`s immediately after success
+may see the previous value. That is allowed. Waiting until
+`getSpeed` matches is a neighboring wait-for-apply, not this
+write. Success means the request was accepted on this call
+(skipped because applied speed already matched under Lua `==`, or
+`setSpeed` returned). It does not mean `getSpeed` already equals
+`rpm`.
+
+Calling `getSpeed` yields. Skip-same still does that on every call
+that reaches the check, including when it then skips `setSpeed`.
+When Lua `==` fails, `setSpeed` yields a second time. Java
+`setSpeed` calling `getSpeed()` internally is already on the main
+thread; that is not a second Lua yield.
+
+Skip-same is the Lua rule: do not call `setSpeed` when `getSpeed`
+already equals `rpm`. On the Lua-equal path the computer still
+waits on one main-thread peripheral call (`getSpeed` in place of
+`setSpeed`). On the change path it waits on two. Equal-speed
+success is no setter. The skip check is still a main-thread wait.
+Always calling `setSpeed` on the equal path is also one wait.
+Skip-same is not fewer main-thread waits as a justification, not a
+coalescer for in-flight requests, and not a rate-limit defense
+that covers out-of-range repeats.
+
+On this pack the extra write cannot trip a rate limit: `setRPM`
+always returns true. The documented anti-spam throw cannot fire.
+The throw did not only exist for distinct writes. On `main`
+(1.16), same requested RPM before `tick()` still reaches `setRPM`
+and would burn a `cc_antiSpam` token. Distinct-versus-same is
+applied-speed, not requested-speed. If a fork still throws that
+message on distinct writes, including out-of-range repeats, fail
+loud; do not sleep-and-retry.
+
+Do not call `stop` as a special case; `rpm` 0 is `setSpeed(0)`
+after the skip check. Do not call `rotate` or `translate`. Do not
+wrap `servo_motor` (a different 1.21.1 peripheral).
 
 ## Recommendation
 
-Lua: `bearing_turret.set_electric_motor_speed(opts)`. Arity 1. `opts`
-is a table. Keys: `motor_name` optional string, `rpm` required
-finite number. Unknown keys fail loud. Omit, nil, or a second
-argument fail loud. A positional RPM is not legal.
+Lua: `bearing_turret.set_electric_motor_speed(opts)`. Arity 1.
+`opts` is a table. Keys: `motor_name` optional string, `rpm`
+required finite number. Unknown keys fail loud. Omit, nil, or a
+second argument fail loud. A positional RPM is not legal.
 
 Find one `electric_motor`. Name omitted, nil, or `""`: exactly one
 attached. Zero or two-plus fail loud. Named wrap nil or wrong type
 fail loud.
 
-Then the skip / `setSpeed` path above. Success is no Lua values.
+Then skip when applied `getSpeed` equals `rpm` under raw Lua `==`.
+Do not remember last requested RPM. A same-`rpm` call before the
+motor tick may write again. Do not justify skip-same as fewer
+main-thread waits. Success is no Lua values. The caller of
+`bearing_turret.set_electric_motor_speed` must tolerate a tick
+wait whenever the command reaches `getSpeed`.
 
 ## What Would Falsify This
 
 - Amazeballs jar still runs 1.16 `setRPM` with `cc_antiSpam`. Then
-  skip-same is not enough and a retry window is required.
+  allowing same-`rpm` re-entry before `tick()` can trip the throw,
+  and this contract is wrong for the ticket question. A retry
+  window or last-request memory would then be required.
 - In-game `setSpeed` rejects non-integers. Then allowing any finite
   Lua number is wrong.
 - In-game type string is not `electric_motor`.
-- `(float) rpm == getSpeed()` disagrees with Lua `==` on the two
-  numbers this function compared. Then skip-same can still call
-  `setSpeed` every time, or skip a real change.
+- If `getSpeed` were not `mainThread`, skip-same would avoid a
+  main-thread call on the equal path. On this Amazeballs jar it is
+  `mainThread`.
+- In-game, two same-`rpm` calls before the motor tick throw. Then
+  the extra write is not in-contract on this pack.
+- Repeated out-of-range `setSpeed` throws the documented anti-spam
+  message on this pack. Then `getSpeed == rpm` skip is not enough
+  to keep that throw from firing. Fail loud still applies. A
+  last-request cache or Lua clamp-then-compare would be a
+  different write product.
+- `getSpeed` returns generated shaft speed, 0 when inactive. Then
+  skip-same would keep writing a non-zero `rpm` on an unpowered or
+  redstone-stopped motor, and treating those motors as
+  success-and-skip would be wrong.
+- The Amazeballs jar assigns `motorSpeed` inside `setRPM`. Then
+  the post-success lag claim is wrong.
 
 ## Sources
 
 - [Create Addition 1.21.1 COMPUTERCRAFT.md](https://github.com/mrh0/createaddition/blob/1.21.1/COMPUTERCRAFT.md)
 - [ElectricMotorPeripheral.java (1.21.1)](https://github.com/mrh0/createaddition/blob/1.21.1/src/main/java/com/mrh0/createaddition/compat/computercraft/ElectricMotorPeripheral.java)
 - [ElectricMotorBlockEntity.java (1.21.1 setRPM always true)](https://github.com/mrh0/createaddition/blob/1.21.1/src/main/java/com/mrh0/createaddition/blocks/electric_motor/ElectricMotorBlockEntity.java)
+- [LuaFunction.mainThread (CC: Tweaked 1.21.x)](https://tweaked.cc/mc-1.21.x/javadoc/dan200/computercraft/api/lua/LuaFunction.html)
+- [ILuaContext.executeMainThreadTask](https://tweaked.cc/mc-1.21.x/javadoc/dan200/computercraft/api/lua/ILuaContext.html)
 - Ticket 1 paper pack list: Minecraft 1.21.1 Amazeballs jars

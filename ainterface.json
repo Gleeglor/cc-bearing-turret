@@ -37,7 +37,7 @@
     {
       "name": "set_electric_motor_speed",
       "who": "ComputerCraft program wired to a Create Crafts and Additions electric motor",
-      "what": "set that motor's speed; skip setSpeed when getSpeed already equals rpm so the documented anti-spam path is not taken",
+      "what": "set that motor's commanded speed; skip setSpeed when getSpeed already equals rpm; getSpeed is commanded motorSpeed; an out-of-range rpm never equals getSpeed after Java clamp so those calls always write; unpowered or redstone-POWERED motors still succeed and still skip",
       "when": "the motor peripheral is attached",
       "where": "Amazeballs world, kinetic network on the bearing",
       "why": "bearings turn from kinetic input; this is the write primitive; native swivel wrap cannot set angle",

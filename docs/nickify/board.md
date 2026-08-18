@@ -15,10 +15,6 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Vestibule
 
-- #3 Set Electric Motor Speed
-
-## Vestibule
-
 (none)
 
 ## Docs
@@ -27,7 +23,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Code
 
-(none)
+- #3 Set Electric Motor Speed
 
 ## Tests
 

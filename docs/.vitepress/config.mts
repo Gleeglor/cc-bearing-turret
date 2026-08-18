@@ -52,6 +52,14 @@ export default defineConfig({
             text: "Read Swivel Bearing Angle Technical",
             link: "/functions/basic/read-swivel-bearing-angle.technical",
           },
+          {
+            text: "Set Electric Motor Speed",
+            link: "/functions/basic/set-electric-motor-speed",
+          },
+          {
+            text: "Set Electric Motor Speed Technical",
+            link: "/functions/basic/set-electric-motor-speed.technical",
+          },
         ],
       },
     ],
