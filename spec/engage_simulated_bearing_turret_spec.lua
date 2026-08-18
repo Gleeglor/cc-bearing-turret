@@ -218,11 +218,35 @@ expect_error("missing pitch_bearing_name", function()
   engage_simulated_bearing_turret(opts)
 end, "pitch_bearing_name is required")
 
+expect_error("pitch_bearing_name not string", function()
+  local opts = base_opts()
+  opts.pitch_bearing_name = false
+  engage_simulated_bearing_turret(opts)
+end, "pitch_bearing_name must be a string, got boolean")
+
+expect_error("empty pitch_bearing_name", function()
+  local opts = base_opts()
+  opts.pitch_bearing_name = ""
+  engage_simulated_bearing_turret(opts)
+end, "pitch_bearing_name must be a non-empty string")
+
 expect_error("empty pitch_motor_name", function()
   local opts = base_opts()
   opts.pitch_motor_name = ""
   engage_simulated_bearing_turret(opts)
 end, "pitch_motor_name must be a non-empty string")
+
+expect_error("missing pitch_motor_name", function()
+  local opts = base_opts()
+  opts.pitch_motor_name = nil
+  engage_simulated_bearing_turret(opts)
+end, "pitch_motor_name is required")
+
+expect_error("pitch_motor_name not string", function()
+  local opts = base_opts()
+  opts.pitch_motor_name = {}
+  engage_simulated_bearing_turret(opts)
+end, "pitch_motor_name must be a string, got table")
 
 expect_error("missing yaw_motor_name", function()
   local opts = base_opts()
