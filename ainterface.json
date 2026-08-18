@@ -18,6 +18,21 @@
         "selectedTrack": "track map or nil",
         "selectedTrackId": "non-empty string or nil"
       }
+    },
+    {
+      "name": "read_swivel_bearing_angle",
+      "who": "ComputerCraft program wired to a Simulated swivel bearing",
+      "what": "read the stored servo target in degrees via getTargetAngle; visual or physics orientation is out of reach",
+      "when": "the bearing peripheral is attached",
+      "where": "Amazeballs world, native swivel ComputerCraft wrap",
+      "why": "closed-loop rotate needs the angle; native wrap is read-only",
+      "call": "Lua bearing_turret.read_swivel_bearing_angle(opts); opts omitted, nil, or a table whose keys are a subset of inputs; success is one Lua number in degrees",
+      "inputs": {
+        "bearing_name": "optional string on the Lua opts table; swivel_bearing peripheral name; omit key, nil, or empty string to discover"
+      },
+      "outputs": {
+        "angle_degrees": "one Lua number; stored servo target; bearing-local degrees about FACING; remainder negatives from Java %= 360 are allowed; the number already includes Simulated's FACING-negative kinetic speed flip; callers must not re-apply that flip; after disassemble and before the next writer, the number is 0; still one Lua number"
+      }
     }
   ]
 }

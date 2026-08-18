@@ -29,6 +29,8 @@ export default defineConfig({
         items: [
           { text: "1 Overview", link: "/research/1/overview" },
           { text: "1 Paper", link: "/research/1/paper" },
+          { text: "2 Overview", link: "/research/2/overview" },
+          { text: "2 Paper", link: "/research/2/paper" },
         ],
       },
       {
@@ -39,6 +41,14 @@ export default defineConfig({
           {
             text: "Read Radar Tracks Technical",
             link: "/functions/basic/read-radar-tracks.technical",
+          },
+          {
+            text: "Read Swivel Bearing Angle",
+            link: "/functions/basic/read-swivel-bearing-angle",
+          },
+          {
+            text: "Read Swivel Bearing Angle Technical",
+            link: "/functions/basic/read-swivel-bearing-angle.technical",
           },
         ],
       },
