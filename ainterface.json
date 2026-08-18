@@ -8,7 +8,7 @@
       "when": "a Create Radar dish is attached; each time a caller needs this tick's tracks",
       "where": "Amazeballs world, ComputerCraft peripheral wrap on that computer",
       "why": "Create Radar yaw and pitch controllers drive cannon mounts, not Simulated swivel bearings, so this program must read tracks itself",
-      "call": "Lua read_radar_tracks(opts); opts omitted, nil, or a table whose keys are a subset of inputs",
+      "call": "Lua bearing_turret.read_radar_tracks(opts); opts omitted, nil, or a table whose keys are a subset of inputs",
       "inputs": {
         "radar_name": "optional string on the Lua opts table; rotating dish or plane radar peripheral name; omit key, nil, or empty string to discover",
         "monitor_name": "optional string on the Lua opts table; Create Radar monitor peripheral name; omit key, nil, or empty string to discover; name only a monitor by setting this key and omitting radar_name"

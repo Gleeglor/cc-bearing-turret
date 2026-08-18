@@ -400,4 +400,8 @@ local function read_radar_tracks(...)
   return result
 end
 
-return read_radar_tracks
+local bearing_turret = {
+  read_radar_tracks = read_radar_tracks,
+}
+
+return bearing_turret

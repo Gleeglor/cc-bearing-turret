@@ -1,4 +1,8 @@
-local read_radar_tracks = dofile("read_radar_tracks.lua")
+local bearing_turret = dofile("read_radar_tracks.lua")
+
+local function read_radar_tracks(...)
+  return bearing_turret.read_radar_tracks(...)
+end
 
 local failures = 0
 local passes = 0
