@@ -16,3 +16,5 @@ use Going Ballistic physics.
 - [Research 1 Paper](/research/1/paper)
 - [Research 2 Overview](/research/2/overview)
 - [Research 2 Paper](/research/2/paper)
+- [Research 3 Overview](/research/3/overview)
+- [Research 3 Paper](/research/3/paper)

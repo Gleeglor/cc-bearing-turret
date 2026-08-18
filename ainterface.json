@@ -33,6 +33,20 @@
       "outputs": {
         "angle_degrees": "one Lua number; stored servo target; bearing-local degrees about FACING; remainder negatives from Java %= 360 are allowed; the number already includes Simulated's FACING-negative kinetic speed flip; callers must not re-apply that flip; after disassemble and before the next writer, the number is 0; still one Lua number"
       }
+    },
+    {
+      "name": "set_electric_motor_speed",
+      "who": "ComputerCraft program wired to a Create Crafts and Additions electric motor",
+      "what": "set that motor's speed; skip setSpeed when getSpeed already equals rpm so the documented anti-spam path is not taken",
+      "when": "the motor peripheral is attached",
+      "where": "Amazeballs world, kinetic network on the bearing",
+      "why": "bearings turn from kinetic input; this is the write primitive; native swivel wrap cannot set angle",
+      "call": "Lua bearing_turret.set_electric_motor_speed(opts); opts is a table; success is no return values",
+      "inputs": {
+        "motor_name": "optional string on the Lua opts table; electric_motor peripheral name; omit key, nil, or empty string to discover",
+        "rpm": "required finite Lua number; passed to setSpeed as a number; Java clamps to configured RPM range"
+      },
+      "outputs": {}
     }
   ]
 }
