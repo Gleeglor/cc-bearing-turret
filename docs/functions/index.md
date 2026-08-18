@@ -39,3 +39,8 @@ turret. Product features stay out of this catalog.
   a live radar target and drive yaw and pitch Simulated swivels
   toward caller-supplied ballistic degrees; return `{ on_target }`
   (`bearing_turret.aim_turret_at_target`)
+- [Engage Simulated Bearing Turret](/functions/high-level/engage-simulated-bearing-turret)
+  - one engagement step: ballistic solution from the selected
+  radar track, aim Simulated yaw and pitch bearings, fire only
+  when on target (`bearing_turret.engage_simulated_bearing_turret`).
+  Specialized task script.

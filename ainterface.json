@@ -144,6 +144,48 @@
       "outputs": {
         "on_target": "boolean; true iff both axes are on target this invocation (abs of each rotate error_degrees is less than or equal to that axis resolved tolerance); false is still success of this command; Engage fires only when true"
       }
+    },
+    {
+      "name": "engage_simulated_bearing_turret",
+      "who": "ComputerCraft program on the gun computer",
+      "what": "one engagement step: compute a ballistic solution from the selected radar track, aim the Simulated yaw and pitch bearings at that solution, and fire the rotating barrel only when aim reports the gun is on target",
+      "when": "radar, yaw and pitch bearings, their motors, and the barrel fire path are attached; the operator wants one engagement step",
+      "where": "Amazeballs world, ComputerCraft on the gun computer",
+      "why": "Create Radar yaw and pitch controllers drive CBC mounts, not Simulated swivel bearings; Going Ballistic has no ComputerCraft API; this script is the product act that composes those gaps",
+      "call": "Lua bearing_turret.engage_simulated_bearing_turret(opts); opts is a table; success is one table; compute_ballistic_aim required keys and fire_rotating_barrel required keys and yaw_rpm and pitch_rpm are required on this same opts table at parent parse on every call, including off-target steps; yaw_degrees and pitch_degrees are not parent opts keys; presence is unknown; parent parse does not require them even if aim_turret_at_target lists them required; engage copies yaw_degrees and pitch_degrees from compute's success table onto aim_opts; yaw_rpm and pitch_rpm are copied from parent opts onto aim_opts; compute does not output rpm",
+      "inputs": {
+        "radar_name": "optional string on the Lua opts table; omit key, nil, or empty string to discover; forwarded to children that list this key",
+        "monitor_name": "optional string on the Lua opts table; omit key, nil, or empty string to discover; forwarded to children that list this key",
+        "yaw_bearing_name": "required string; Simulated swivel for yaw; only legal parent key for that role; copy onto each child that lists a yaw-bearing input, under the name that child lists; a child's different key string is not legal on this opts table",
+        "pitch_bearing_name": "required string; Simulated swivel for pitch; only legal parent key for that role; copy onto each child that lists a pitch-bearing input, under the name that child lists; a child's different key string is not legal on this opts table",
+        "yaw_motor_name": "required string; electric_motor on the yaw bearing; only legal parent key for that role; copy onto each child that lists a yaw-motor input, under the name that child lists; a child's different key string is not legal on this opts table",
+        "pitch_motor_name": "required string; electric_motor on the pitch bearing; only legal parent key for that role; copy onto each child that lists a pitch-motor input, under the name that child lists; a child's different key string is not legal on this opts table",
+        "yaw_rpm": "required finite Lua number; aim_turret_at_target required key; forwarded to aim; not taken from compute_ballistic_aim",
+        "pitch_rpm": "required finite Lua number; aim_turret_at_target required key; forwarded to aim; not taken from compute_ballistic_aim",
+        "side": "required string on the Lua opts table; ComputerCraft side name: top, bottom, left, right, front, or back; fire_rotating_barrel required key; required at parent parse on every call, including off-target steps",
+        "relay_name": "optional string on the Lua opts table; redstone_relay peripheral name; fire_rotating_barrel optional key; omit key, nil, or empty string to use the computer redstone API",
+        "muzzle_x": "required finite Lua number; compute_ballistic_aim required key; forwarded to compute",
+        "muzzle_y": "required finite Lua number; compute_ballistic_aim required key; forwarded to compute",
+        "muzzle_z": "required finite Lua number; compute_ballistic_aim required key; forwarded to compute",
+        "projectile_mass_kg": "required finite Lua number; compute_ballistic_aim required key; forwarded to compute",
+        "powder_mass_kg": "required finite Lua number; compute_ballistic_aim required key; forwarded to compute",
+        "charge_length_meters": "required finite Lua number; compute_ballistic_aim required key; forwarded to compute",
+        "barrel_length_meters": "required finite Lua number; compute_ballistic_aim required key; forwarded to compute",
+        "track": "optional table; compute_ballistic_aim optional key; forwarded to compute",
+        "trajectory": "optional string; compute_ballistic_aim optional key; omit key, nil, or empty string means omit; forwarded to compute",
+        "projectile_kind": "optional string; compute_ballistic_aim optional key; omit key, nil, or empty string means omit; forwarded to compute",
+        "max_ticks": "optional finite Lua number; compute_ballistic_aim optional key; forwarded to compute",
+        "gravity_multiplier": "optional finite Lua number; compute_ballistic_aim optional key; forwarded to compute",
+        "drag_multiplier": "optional finite Lua number; compute_ballistic_aim optional key; forwarded to compute",
+        "muzzle_velocity_blocks_per_tick": "optional finite Lua number; compute_ballistic_aim optional key; forwarded to compute",
+        "track_id": "optional string; aim_turret_at_target optional key; omit key, nil, or empty string means omit; forwarded to aim",
+        "yaw_tolerance_degrees": "optional finite Lua number; aim_turret_at_target optional key; forwarded to aim",
+        "pitch_tolerance_degrees": "optional finite Lua number; aim_turret_at_target optional key; forwarded to aim"
+      },
+      "outputs": {
+        "fired": "boolean; true only when fire_rotating_barrel ran this step",
+        "on_target": "boolean; true when aim_turret_at_target reported the gun on the solution this step"
+      }
     }
   ]
 }

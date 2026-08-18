@@ -41,6 +41,8 @@ export default defineConfig({
           { text: "6 Paper", link: "/research/6/paper" },
           { text: "7 Overview", link: "/research/7/overview" },
           { text: "7 Paper", link: "/research/7/paper" },
+          { text: "8 Overview", link: "/research/8/overview" },
+          { text: "8 Paper", link: "/research/8/paper" },
         ],
       },
       {
@@ -99,6 +101,14 @@ export default defineConfig({
           {
             text: "Aim Turret At Target Technical",
             link: "/functions/high-level/aim-turret-at-target.technical",
+          },
+          {
+            text: "Engage Simulated Bearing Turret",
+            link: "/functions/high-level/engage-simulated-bearing-turret",
+          },
+          {
+            text: "Engage Simulated Bearing Turret Technical",
+            link: "/functions/high-level/engage-simulated-bearing-turret.technical",
           },
         ],
       },

@@ -1,6 +1,6 @@
 # Plan
 
-Active focus: Set Electric Motor Speed (#3) through Circles of Hell.
+Active focus: Engage Simulated Bearing Turret (#8) through Circles of Hell.
 
 - [Set Electric Motor Speed](https://github.com/Gleeglor/cc-bearing-turret/issues/3)
 - [Fire Rotating Barrel](https://github.com/Gleeglor/cc-bearing-turret/issues/4)

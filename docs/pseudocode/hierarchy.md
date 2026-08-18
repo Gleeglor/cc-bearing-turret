@@ -26,14 +26,19 @@ contract when their tickets enter the Vestibule. Non-leaf names
 are this topic's functions. They are not other topics.
 
 Lua call this ticket:
-`bearing_turret.compute_ballistic_aim(opts)`. `opts` is a table
-of ainterface input keys. Success is one table of yaw, pitch,
-time of flight, muzzle speed, impact point, and trajectory name.
+`bearing_turret.engage_simulated_bearing_turret(opts)`. `opts` is
+a table of ainterface input keys. Axis bearing and motor names
+are required. Success is one table (`on_target`, `fired`).
 
 ## bearing_turret.engage_simulated_bearing_turret
 
 Parent [#8](https://github.com/Gleeglor/cc-bearing-turret/issues/8).
-High-level specialized script. No research page yet.
+High-level specialized script.
+
+- [Functional](/functions/high-level/engage-simulated-bearing-turret)
+- [Technical](/functions/high-level/engage-simulated-bearing-turret.technical)
+- [Overview](/research/8/overview)
+- [Paper](/research/8/paper)
 
 ### Who
 
@@ -77,7 +82,7 @@ Turn a track pose into a firing solution.
 
 ### When
 
-A track is selected or chosen.
+A selected radar pose exists.
 
 ### Where
 
