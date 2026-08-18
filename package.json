@@ -6,7 +6,7 @@
   "scripts": {
     "start:docs": "vitepress dev docs --port 45281 --host 127.0.0.1",
     "build:docs": "vitepress build docs",
-    "test": "lua spec/read_radar_tracks_spec.lua && lua spec/read_swivel_bearing_angle_spec.lua && lua spec/set_electric_motor_speed_spec.lua"
+    "test": "lua spec/read_radar_tracks_spec.lua && lua spec/read_swivel_bearing_angle_spec.lua && lua spec/set_electric_motor_speed_spec.lua && lua spec/fire_rotating_barrel_spec.lua"
   },
   "engines": {
     "node": ">=18"

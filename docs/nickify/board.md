@@ -18,11 +18,11 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Docs
 
-- #4 Fire Rotating Barrel
+(none)
 
 ## Code
 
-- #3 Set Electric Motor Speed
+(none)
 
 ## Tests
 
@@ -30,7 +30,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Compare
 
-(none)
+- #4 Fire Rotating Barrel
 
 ## Blocked
 
