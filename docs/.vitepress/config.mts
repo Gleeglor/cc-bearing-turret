@@ -72,6 +72,14 @@ export default defineConfig({
             text: "Fire Rotating Barrel Technical",
             link: "/functions/basic/fire-rotating-barrel.technical",
           },
+          {
+            text: "Rotate Bearing Toward Angle",
+            link: "/functions/advanced/rotate-bearing-toward-angle",
+          },
+          {
+            text: "Rotate Bearing Toward Angle Technical",
+            link: "/functions/advanced/rotate-bearing-toward-angle.technical",
+          },
         ],
       },
     ],

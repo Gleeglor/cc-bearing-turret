@@ -17,11 +17,11 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Docs
 
-- #5 Rotate Bearing Toward Angle
+(none)
 
 ## Code
 
-(none)
+- #5 Rotate Bearing Toward Angle
 
 ## Tests
 

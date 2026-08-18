@@ -111,6 +111,8 @@ path.
 [#5](https://github.com/Gleeglor/cc-bearing-turret/issues/5).
 Advanced. On the ainterface this ticket.
 
+- [Functional](/functions/advanced/rotate-bearing-toward-angle)
+- [Technical](/functions/advanced/rotate-bearing-toward-angle.technical)
 - [Overview](/research/5/overview)
 - [Paper](/research/5/paper)
 
