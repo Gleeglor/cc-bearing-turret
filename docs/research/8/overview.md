@@ -49,16 +49,17 @@ for those roles. `side` is required (`fire_rotating_barrel`).
 `relay_name` is optional. Child keys from #6 and #7 join that table
 when those rows exist, except a child string that names one of those
 four roles under a different key, and except the aim child's
-firing-solution input (placeholder `solution` until #6 names it).
+firing-solution keys `yaw_degrees`, `pitch_degrees`, `yaw_rpm`, and
+`pitch_rpm`.
 Those excepted strings are not parent keys; if present they are
 unknown and fail loud. Engage forwards each parent axis value under
 the name the child lists. If both the parent name and the child's
 different string are present, the child's string is unknown and
 fails loud. Fire-required keys from #4 (`side`) fail at parent parse on every
 call; off-target skip is not a pass on a missing fire key. Parent
-parse does not require the aim child's solution input, even if that
-child lists it required. Engage writes compute's success table onto
-`aim_opts` under that name only. Success is one table: `on_target`,
+parse does not require those four firing-solution keys, even if
+aim lists them required. Engage copies those keys from compute's
+success table onto `aim_opts`. Success is one table: `on_target`,
 `fired`.
 
 Paper: [paper](paper.md).

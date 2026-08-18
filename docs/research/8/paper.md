@@ -122,10 +122,9 @@ The parent does not contain `while true`.
    tracks (including operator selection) and returns a firing
    solution under Going Ballistic physics.
 2. Call `aim_turret_at_target` with that child's advertised
-   inputs. Engage writes compute's success table onto `aim_opts`
-   under the input name that child advertises for the firing
-   solution. Until that row names a key, that name is
-   `solution`. The caller does not supply that key. Aim is one
+   inputs. Engage copies `yaw_degrees`, `pitch_degrees`,
+   `yaw_rpm`, and `pitch_rpm` from compute's success table onto
+   `aim_opts`. The caller does not supply those keys. Aim is one
    kinetic step, not a wait until aligned.
 3. If aim reports the gun is on the solution this step, call
    `fire_rotating_barrel` with that child's advertised inputs.
@@ -187,9 +186,9 @@ become the union of those two input maps with the keys above, except a child key
 that names yaw bearing, pitch bearing, yaw motor, or pitch motor
 under a string other than `yaw_bearing_name`,
 `pitch_bearing_name`, `yaw_motor_name`, or `pitch_motor_name`,
-and except the input name `aim_turret_at_target` advertises for
-the firing solution. Until that row names a key, that name is
-`solution`. Those four parent axis names stay required. They
+and except the firing-solution keys `aim_turret_at_target`
+lists: `yaw_degrees`, `pitch_degrees`, `yaw_rpm`, and
+`pitch_rpm`. Those four parent axis names stay required. They
 are not dropped, and the child's different strings are not
 added as second parent keys. Engage copies each parent axis
 value onto a child `opts` under the name that child lists for
@@ -197,11 +196,11 @@ that role: a rename when the strings differ, a same-key copy
 when they match. If a caller puts both `yaw_bearing_name` and a
 child's different yaw key on `opts`, the child's key is unknown
 and fails loud; the parent name is the only legal key for that
-role. The aim child's firing-solution input is not a parent
-`opts` key. Presence on parent `opts` is unknown and fails
-loud. Parent parse does not require it, even if the aim child
-lists it required. Engage writes compute's success table onto
-`aim_opts` under that name only. It does not copy that key from
+role. Those four firing-solution keys are not parent `opts`
+keys. Presence on parent `opts` is unknown and fails
+loud. Parent parse does not require them, even if the aim child
+lists them required. Engage copies them from compute's success
+table onto `aim_opts`. It does not copy them from
 parent `opts`. `side` and `relay_name` are the fire-child keys
 now listed. `side` is required on every engage call and fails at
 parent parse, not after aim reports on-target. Engage forwards

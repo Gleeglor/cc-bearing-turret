@@ -80,15 +80,17 @@ If both a parent axis name and a child's different string for
 that role are present, the child's string is unknown and fails
 loud.
 
-The second exception is the input name `aim_turret_at_target`
-advertises for the firing solution. Until that row names a key,
-that name is `solution`. That key is not a parent `opts` key.
-If it is present on parent `opts`, it is unknown and fails loud.
-Parent parse does not require it, even if the aim child lists it
-required. The caller does not pass a firing solution. Engage
-does not copy that key from parent `opts`. After compute returns
-a success table, engage writes that table onto `aim_opts` under
-that name only.
+The second exception is the firing-solution keys
+`aim_turret_at_target` lists: `yaw_degrees`, `pitch_degrees`,
+`yaw_rpm`, and `pitch_rpm`. Those keys are not parent `opts`
+keys. If any is present on parent `opts`, it is unknown and
+fails loud. Parent parse does not require them, even if the aim
+child lists them required. The caller does not pass a firing
+solution. Engage does not copy those keys from parent `opts`.
+After compute returns a success table, engage copies those four
+keys from that table onto `aim_opts`. It does not nest them.
+Missing keys on the compute table still go to the child; engage
+does not invent degrees or RPM.
 
 Engage does not invent ballistic or fire internals.
 
