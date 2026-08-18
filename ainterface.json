@@ -49,6 +49,39 @@
       "outputs": {}
     },
     {
+      "name": "fire_rotating_barrel",
+      "who": "ComputerCraft program on the gun computer",
+      "what": "pulse analog strength 1 for two game ticks on the Create Big Cannons mount fire face, then 0, so the rotating autocannon fires once",
+      "when": "the barrel loop is spinning and a shot is wanted",
+      "where": "Amazeballs world. Mount fire face, separate from the aim motors. ComputerCraft redstone API or a redstone_relay on that face",
+      "why": "Create Big Cannons has no ComputerCraft fire method; the native trigger is analog redstone on the mount fire face. Aim does not pull the trigger",
+      "call": "Lua bearing_turret.fire_rotating_barrel(opts); opts is a table; success is no return values",
+      "inputs": {
+        "side": "required string on the Lua opts table; ComputerCraft side name: top, bottom, left, right, front, or back",
+        "relay_name": "optional string on the Lua opts table; redstone_relay peripheral name; omit key, nil, or empty string to use the computer redstone API"
+      },
+      "outputs": {}
+    },
+    {
+      "name": "rotate_bearing_toward_angle",
+      "who": "ComputerCraft program on the gun computer",
+      "what": "one closed-loop step: read one stored swivel target, command one motor toward a commanded angle, return signed shortest-path error; does not sleep until arrival and does not wait for Simulated integration or cc_update_rpm; every success that reaches set_electric_motor_speed inherits that child's getSpeed main-thread yield, and setSpeed when that child writes",
+      "when": "the bearing and motor peripherals are attached and a target angle is known",
+      "where": "Amazeballs world, one electric motor on one Simulated swivel bearing (intended world, not a runtime kinetic-connectivity test); bearing_name and motor_name identify which child wrap to read and which child wrap to write; they do not assert that the named motor drives the named bearing; omit, nil, or empty-string discovery still does not prove shaft membership",
+      "why": "native swivel wrap cannot set angle; kinetic input is the write path; aim composes this once per axis",
+      "call": "Lua bearing_turret.rotate_bearing_toward_angle(opts); opts is a table; success is one Lua number, signed shortest-path error in degrees; leftover inside the tolerance band is still that number, including when the motor is commanded 0; magnitude is at most 180; success that reaches the motor write is not yield-free: getSpeed always yields on that child, setSpeed yields when that child writes; read_swivel_bearing_angle may yield if its getter is main-thread",
+      "inputs": {
+        "target_degrees": "required finite Lua number; commanded stored servo target in degrees; compared on the remainder circle to read_swivel_bearing_angle",
+        "rpm": "required finite Lua number; motor command whose sign increases the stored field; the write is 0 if and only if abs(shortest-path error) is less than or equal to the resolved tolerance; otherwise that value when the error is positive, and its negation when the error is negative; 0 is a legal stop-only step",
+        "bearing_name": "optional string on the Lua opts table; passed through to read_swivel_bearing_angle; omit key, nil, or empty string to discover",
+        "motor_name": "optional string on the Lua opts table; passed through to set_electric_motor_speed; omit key, nil, or empty string to discover",
+        "tolerance_degrees": "optional finite Lua number greater than or equal to 0; omit key or nil means 1; empty string is not default and fails as a non-number; motor is commanded 0 when abs(error) is less than or equal to this"
+      },
+      "outputs": {
+        "error_degrees": "one Lua number; signed shortest-path error in degrees from the stored servo target to target_degrees; positive means the stored field must increase; Java remainder negatives from the child read are allowed and wrapped here; 180 chooses the positive path; magnitude is at most 180; leftover inside the tolerance band is still returned, including when the motor is commanded 0; success is not 0 merely because the motor stopped"
+      }
+    },
+    {
       "name": "engage_simulated_bearing_turret",
       "who": "ComputerCraft program on the gun computer",
       "what": "one engagement step: compute a ballistic solution from the selected radar track, aim the Simulated yaw and pitch bearings at that solution, and fire the rotating barrel only when aim reports the gun is on target",

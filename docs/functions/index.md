@@ -17,10 +17,17 @@ turret. Product features stay out of this catalog.
   `setSpeed` when `getSpeed` already equals the request; out-of-range
   requests always write
   (`bearing_turret.set_electric_motor_speed`)
+- [Fire Rotating Barrel](/functions/basic/fire-rotating-barrel) -
+  pulse analog strength 1 for two game ticks on a Create Big Cannons
+  mount fire face, then 0
+  (`bearing_turret.fire_rotating_barrel`)
 
 ## Advanced
 
-(none)
+- [Rotate Bearing Toward Angle](/functions/advanced/rotate-bearing-toward-angle)
+  - one closed-loop step: read one stored swivel target, command one
+  motor toward a commanded angle, return signed shortest-path error
+  (`bearing_turret.rotate_bearing_toward_angle`)
 
 ## High-level
 
