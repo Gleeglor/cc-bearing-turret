@@ -14,16 +14,18 @@ split this tree into sibling repos.
       - bearing_turret.set_electric_motor_speed
   - bearing_turret.fire_rotating_barrel
 
-Leaves are ainterface commands. Only
-`bearing_turret.read_radar_tracks` is on `ainterface.json` this
-ticket. Other basic leaves join the contract when their tickets
-enter the Vestibule. Non-leaf names are this topic's functions.
-They are not other topics. They join the ainterface when their
-own tickets enter the Vestibule.
+Leaves are ainterface commands. On `ainterface.json` now:
+`bearing_turret.read_radar_tracks` and
+`bearing_turret.read_swivel_bearing_angle`. Other basic leaves
+join the contract when their tickets enter the Vestibule.
+Non-leaf names are this topic's functions. They are not other
+topics. They join the ainterface when their own tickets enter the
+Vestibule.
 
-Lua call this ticket: `bearing_turret.read_radar_tracks(opts)`.
-`opts` is omitted, nil, or a table of ainterface input keys, not
-two positionals.
+Lua call this ticket:
+`bearing_turret.read_swivel_bearing_angle(opts)`. `opts` is
+omitted, nil, or a table of ainterface input keys, not a
+positional name. Success is one Lua number in degrees.
 
 ## bearing_turret.engage_simulated_bearing_turret
 
@@ -163,7 +165,12 @@ cannot aim Simulated swivel bearings. Callers read tracks here.
 ## bearing_turret.read_swivel_bearing_angle
 
 [#2](https://github.com/Gleeglor/cc-bearing-turret/issues/2).
-Basic. Not yet on the ainterface.
+Basic. On the ainterface this ticket.
+
+- [Functional](/functions/basic/read-swivel-bearing-angle)
+- [Technical](/functions/basic/read-swivel-bearing-angle.technical)
+- [Overview](/research/2/overview)
+- [Paper](/research/2/paper)
 
 ### Who
 

@@ -13,7 +13,6 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 - #5 Rotate Bearing Toward Angle
 - #4 Fire Rotating Barrel
 - #3 Set Electric Motor Speed
-- #2 Read Swivel Bearing Angle
 
 ## Vestibule
 
@@ -33,7 +32,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Compare
 
-- #1 Read Radar Tracks (Eighth Circle passed)
+- #2 Read Swivel Bearing Angle (Eighth Circle passed)
 
 ## Blocked
 
@@ -41,4 +40,4 @@ GitHub Project board - token lacks `project` / `read:project`
 
 ## Done
 
-(none)
+- #1 Read Radar Tracks (merged PR 9, SHA 3e14e01)
