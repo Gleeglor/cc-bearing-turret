@@ -25,8 +25,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Code
 
-- #1 Read Radar Tracks (Fourth Circle; docs passed Vestibule
-  through Third Circle)
+(none)
 
 ## Tests
 
@@ -34,7 +33,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Compare
 
-(none)
+- #1 Read Radar Tracks (Eighth Circle passed)
 
 ## Blocked
 

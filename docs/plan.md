@@ -1,6 +1,5 @@
 # Plan
 
-Active focus: Fourth Circle for Read Radar Tracks (#1). Docs
-passed. Next artifact is production Lua.
+Active focus: merge Read Radar Tracks (#1) after Eighth Circle.
 
 - [Read Radar Tracks](https://github.com/Gleeglor/cc-bearing-turret/issues/1)
