@@ -7,7 +7,7 @@ labels: nickify, circle:vestibule
 
 ## Level
 
-<!-- basic | advanced | high-level | bytecode -->
+<!-- Module level: basic | advanced | high-level | bytecode -->
 
 ## Current circle
 
@@ -16,6 +16,12 @@ The Vestibule (Research Checker)
 ## Question
 
 <!-- What this ticket asks. One function. -->
+
+## Git
+
+- Branch: `nickify/<issue>-<command>`
+- PR:
+- Merge SHA:
 
 ## Links
 
