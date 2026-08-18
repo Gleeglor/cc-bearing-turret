@@ -304,16 +304,23 @@ two of each peripheral, so production callers pass names.
   solution take the same path. Names pick wraps on the children,
   not a yaw-vs-pitch fork inside shared write code.
 
-Atomic Design: molecule. It composes Read Radar Tracks (atom)
-and Rotate Bearing Toward Angle (molecule on one axis). The
-parent tree already split rotate so this command does not own
-the one-axis motor step. Engage Simulated Bearing Turret is the
-organism (specialized script) that also fires and computes
-ballistics. This command is not that bundle.
+Atomic Design: organism (specialized task script), not molecule. A
+molecule is atoms only. `rotate_bearing_toward_angle` is the
+molecule (advanced; atoms `read_swivel_bearing_angle` and
+`set_electric_motor_speed`). `read_radar_tracks` is an atom
+(basic). This command includes that molecule, so it is an
+organism. Split-off rotate is why rotate is the molecule and
+this command is the organism that uses it. This command is not
+a page (bytecode). Engage Simulated Bearing Turret may remain
+an organism; nested organisms are allowed. Engage is the
+product-act organism. This command is the dual-axis aim
+organism.
 
 ## Compatibility
 
-Advanced. May be called by high-level functions. Calls one basic
-(`read_radar_tracks`) and one same-topic advanced sibling
-(`rotate_bearing_toward_angle`) through ainterfaces. Must not
-call high-level Engage. Must not reach into child internals.
+High-level specialized task script. Advanced only composes
+basics. This command composes one basic (`read_radar_tracks`)
+and one same-topic advanced sibling
+(`rotate_bearing_toward_angle`) through ainterfaces, so the mix
+is high-level. Must not call high-level Engage. Must not reach
+into child internals.

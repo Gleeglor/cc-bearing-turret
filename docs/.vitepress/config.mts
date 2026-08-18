@@ -84,11 +84,11 @@ export default defineConfig({
           },
           {
             text: "Aim Turret At Target",
-            link: "/functions/advanced/aim-turret-at-target",
+            link: "/functions/high-level/aim-turret-at-target",
           },
           {
             text: "Aim Turret At Target Technical",
-            link: "/functions/advanced/aim-turret-at-target.technical",
+            link: "/functions/high-level/aim-turret-at-target.technical",
           },
         ],
       },

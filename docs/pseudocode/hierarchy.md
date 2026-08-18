@@ -85,12 +85,12 @@ Going Ballistic has no ComputerCraft API. Lead is computed in Lua.
 ## bearing_turret.aim_turret_at_target
 
 [#6](https://github.com/Gleeglor/cc-bearing-turret/issues/6).
-Advanced.
+High-level specialized script. On the ainterface this ticket.
 
 - [Overview](/research/6/overview)
 - [Paper](/research/6/paper)
-- [Functional](/functions/advanced/aim-turret-at-target)
-- [Technical](/functions/advanced/aim-turret-at-target.technical)
+- [Functional](/functions/high-level/aim-turret-at-target)
+- [Technical](/functions/high-level/aim-turret-at-target.technical)
 
 ### Who
 
@@ -98,20 +98,25 @@ ComputerCraft program on the gun computer.
 
 ### What
 
-Drive yaw and pitch bearings to a commanded angle.
+Confirm a live radar target this tick and drive yaw and pitch
+Simulated swivel bearings one dual-axis control tick toward
+caller-supplied ballistic degrees. Report whether both axes are
+on target this step.
 
 ### When
 
-A firing solution or angle command exists.
+A firing solution exists and a Create Radar dish is attached.
 
 ### Where
 
-Kinetic motors on Simulated swivel bearings.
+Amazeballs world. Kinetic motors on Simulated yaw and pitch
+swivel bearings.
 
 ### Why
 
-Native swivel ComputerCraft is read-only. Motors are the write
-path.
+Create Radar yaw and pitch controllers drive cannon mounts, not
+this Lua path. This command aims bearings at a solution. It does
+not compute Going Ballistic physics.
 
 ## bearing_turret.rotate_bearing_toward_angle
 

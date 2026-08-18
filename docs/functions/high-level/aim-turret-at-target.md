@@ -6,7 +6,7 @@ caller-supplied ballistic degrees.
 
 ## Level
 
-Advanced.
+High-level specialized task script.
 
 Ainterface command: `bearing_turret.aim_turret_at_target`.
 
