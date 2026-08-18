@@ -11,11 +11,10 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 - #7 Compute Ballistic Aim
 - #6 Aim Turret At Target
 - #5 Rotate Bearing Toward Angle
-- #4 Fire Rotating Barrel
 
 ## Vestibule
 
-(none)
+- #4 Fire Rotating Barrel
 
 ## Docs
 

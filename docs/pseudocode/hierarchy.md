@@ -16,17 +16,18 @@ split this tree into sibling repos.
 
 Leaves are ainterface commands. On `ainterface.json` now:
 `bearing_turret.read_radar_tracks`,
-`bearing_turret.read_swivel_bearing_angle`, and
-`bearing_turret.set_electric_motor_speed`. Other basic leaves
+`bearing_turret.read_swivel_bearing_angle`,
+`bearing_turret.set_electric_motor_speed`, and
+`bearing_turret.fire_rotating_barrel`. Other basic leaves
 join the contract when their tickets enter the Vestibule.
 Non-leaf names are this topic's functions. They are not other
 topics. They join the ainterface when their own tickets enter the
 Vestibule.
 
 Lua call this ticket:
-`bearing_turret.set_electric_motor_speed(opts)`. `opts` is a
-table of ainterface input keys. `rpm` is required. Success is no
-return values.
+`bearing_turret.fire_rotating_barrel(opts)`. `opts` is a table of
+ainterface input keys. `side` is required. Success is no return
+values.
 
 ## bearing_turret.engage_simulated_bearing_turret
 
@@ -227,7 +228,7 @@ Bearings turn from kinetic input. This is the write primitive.
 ## bearing_turret.fire_rotating_barrel
 
 [#4](https://github.com/Gleeglor/cc-bearing-turret/issues/4).
-Basic. Not yet on the ainterface.
+Basic. On the ainterface this ticket.
 
 ### Who
 
