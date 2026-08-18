@@ -21,7 +21,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Code
 
-- #5 Rotate Bearing Toward Angle
+(none)
 
 ## Tests
 
@@ -30,6 +30,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 ## Compare
 
 - #4 Fire Rotating Barrel
+- #5 Rotate Bearing Toward Angle
 
 ## Blocked
 
