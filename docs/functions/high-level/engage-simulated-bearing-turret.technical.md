@@ -21,16 +21,14 @@ that is not a table fail loud. A string as argument 1 is not a
 positional name. A wrap table is still a table and continues; it
 is not a valid `opts` and fails later envelope.
 
-`opts` a table: legal keys are this command's six named keys on
-`ainterface.json`, plus keys listed as inputs on
-`compute_ballistic_aim`, `aim_turret_at_target`, and
-`fire_rotating_barrel` once those rows exist, except a child
-string that names yaw bearing, pitch bearing, yaw motor, or
-pitch motor under a key other than `yaw_bearing_name`,
-`pitch_bearing_name`, `yaw_motor_name`, or `pitch_motor_name`,
-and except the firing-solution keys `aim_turret_at_target`
-lists: `yaw_degrees`, `pitch_degrees`, `yaw_rpm`, and
-`pitch_rpm`. Those excepted strings are unknown. Any other key
+`opts` a table: legal keys are this command's keys on
+`ainterface.json`. Child keys from `compute_ballistic_aim`,
+`aim_turret_at_target`, and `fire_rotating_barrel` are already
+named there, except a child string that names yaw bearing, pitch
+bearing, yaw motor, or pitch motor under a key other than
+`yaw_bearing_name`, `pitch_bearing_name`, `yaw_motor_name`, or
+`pitch_motor_name`, and except `yaw_degrees` and `pitch_degrees`.
+Those excepted strings are unknown. Any other key
 fails loud, including array index `1`. Unknown-key scan runs
 before required-field checks.
 
@@ -55,22 +53,25 @@ fail loud. Do not assume wrap identity beyond the string.
 Check equal bearings before equal motors.
 
 Child-listed keys use that child's required/optional rule at
-parent parse, including `fire_rotating_barrel` keys, except the
-aim child's firing-solution keys `yaw_degrees`, `pitch_degrees`,
-`yaw_rpm`, and `pitch_rpm`. `fire_rotating_barrel` is on
-the ainterface: `side` is required on every engage call;
-`relay_name` is optional (omit, nil, or `""` means omit). A
-fire-required key missing from `opts` fails loud on this call,
-whether or not aim will report `on_target`. Do not wait until
-fire runs. Optional fire keys stay optional. A child string that names one of the four
+parent parse, including `compute_ballistic_aim` keys,
+`aim_turret_at_target` keys, and `fire_rotating_barrel` keys,
+except `yaw_degrees` and `pitch_degrees`. Compute required keys
+on every engage call, in this order: `muzzle_x`, `muzzle_y`,
+`muzzle_z`, `projectile_mass_kg`, `powder_mass_kg`,
+`charge_length_meters`, `barrel_length_meters`. Then `yaw_rpm`,
+then `pitch_rpm`. Then `side`. `relay_name` is optional (omit,
+nil, or `""` means omit). A required key missing from `opts`
+fails loud on this call, whether or not aim will report
+`on_target`. Do not wait until fire runs. Optional child keys
+stay optional. A child string that names one of the four
 axis roles under a different key is not legal on parent `opts`;
 if present, fail loud as an unknown input (before this
-required/optional pass). `yaw_degrees`, `pitch_degrees`,
-`yaw_rpm`, and `pitch_rpm` are also not legal on parent `opts`;
-if present, fail loud as an unknown input (before this
-required/optional pass). Parent parse does not require them,
-even if the aim child lists them required. Engage does not
-invent muzzle velocity, barrel names, degrees, or RPM.
+required/optional pass). `yaw_degrees` and `pitch_degrees` are
+also not legal on parent `opts`; if present, fail loud as an
+unknown input (before this required/optional pass). Parent parse
+does not require them, even if the aim child lists them
+required. Engage does not invent muzzle velocity, barrel names,
+degrees, or RPM.
 
 ### Load
 
@@ -98,6 +99,12 @@ any child call. Do not pass the parent table through.
 Copy onto each child table only keys that child lists. Do not
 copy a parent key the child does not list.
 
+Optional string keys: if the parent value is nil or `""`, omit
+the key on the child table. Apply that to `radar_name`,
+`monitor_name`, `relay_name`, `track_id`, `trajectory`, and
+`projectile_kind`. Other optional keys copy when present and not
+nil.
+
 Source for `yaw_bearing_name`, `pitch_bearing_name`,
 `yaw_motor_name`, and `pitch_motor_name` is always those parent
 keys. If the child lists an input for that role, write the
@@ -112,20 +119,22 @@ forwarded.
 
 For every other child-listed key, copy from parent `opts` only
 when the strings match. Do not copy unknown keys. Do not copy
-`yaw_degrees`, `pitch_degrees`, `yaw_rpm`, or `pitch_rpm` from
-parent `opts`. Envelope already applied each child's
-required/optional rule, including `fire_opts` on every call.
-Envelope does not require those four firing-solution keys.
+`yaw_degrees` or `pitch_degrees` from parent `opts`. Envelope
+already applied each child's required/optional rule, including
+`compute_opts`, `aim_opts` RPM, and `fire_opts` on every call.
+Envelope does not require `yaw_degrees` or `pitch_degrees`.
+`yaw_rpm` and `pitch_rpm` copy from parent `opts` onto
+`aim_opts`.
 
 1. `compute_ballistic_aim(compute_opts)`. Take the first return
    value only. It must be a Lua table with at least one key.
    Nil, non-table, or empty table fails loud. Do not invent
    field names on that table.
-2. Copy `yaw_degrees`, `pitch_degrees`, `yaw_rpm`, and
-   `pitch_rpm` from compute's success table onto `aim_opts`
-   when those keys are present. Do not nest the table. That
-   copy is the only way those keys appear on `aim_opts`. Do
-   not read them from parent `opts`. Call
+2. Copy `yaw_degrees` and `pitch_degrees` from compute's success
+   table onto `aim_opts` when those keys are present. Do not
+   nest the table. Do not copy other compute output fields onto
+   `aim_opts`. That copy is the only way those two keys appear
+   on `aim_opts`. Do not read them from parent `opts`. Call
    `aim_turret_at_target(aim_opts)`. Take the first return
    value only. It must be a Lua table. Key `on_target` must be
    a boolean (`true` or `false`). Missing, nil, or any other
@@ -160,12 +169,8 @@ Engage does not call `getTracks`, `getTargetAngle`, `setSpeed`,
 - Child modules for compute, aim, and fire exist as ainterface
   commands and Lua files before load. Envelope still runs if
   those files are absent, so envelope messages stay stable.
-  Until those rows exist on `origin/master`, this how is the
-  design; production code waits.
-- `opts` is a table of this command's keys (and child-listed
-  keys once present, except axis-role remaps and the aim child's
-  firing-solution keys `yaw_degrees`, `pitch_degrees`,
-  `yaw_rpm`, and `pitch_rpm`).
+- `opts` is a table of this command's keys, except axis-role
+  remaps and `yaw_degrees` / `pitch_degrees`.
 - Axis names are distinct non-empty strings.
 - A usable selected radar pose exists this step (compute's
   contract).
@@ -199,8 +204,7 @@ distinguishing message.
   `Engage Simulated Bearing Turret: inputs must be a table, got <type>`
 - Unknown `opts` key:
   `Engage Simulated Bearing Turret: unknown input '<key>'`
-- Present `yaw_degrees`, `pitch_degrees`, `yaw_rpm`, or
-  `pitch_rpm` on parent `opts`:
+- Present `yaw_degrees` or `pitch_degrees` on parent `opts`:
   `Engage Simulated Bearing Turret: unknown input '<key>'`
   (same unknown-input message; those keys are not parent keys)
 - Present `radar_name` or `monitor_name` not a string:
@@ -225,6 +229,12 @@ distinguishing message.
 - Missing fire-child required key:
   `Engage Simulated Bearing Turret: <key> is required`
   (same shape as missing axis names; use the child's key name)
+- Missing compute-child required key:
+  `Engage Simulated Bearing Turret: <key> is required`
+  (same shape; `muzzle_x` first among those seven)
+- Missing `yaw_rpm` or `pitch_rpm`:
+  `Engage Simulated Bearing Turret: yaw_rpm is required`
+  (same shape for `pitch_rpm`)
 - Child module load or command missing, including a thrown
   `dofile`:
   `Engage Simulated Bearing Turret: missing command '<name>'`
@@ -262,10 +272,11 @@ distinguishing message.
   `opts`, a non-table `opts`, or an unknown key fail loud as
   envelope failures.
 - Child returns: first value only. Extra Lua returns discarded.
-- Copy `yaw_degrees`, `pitch_degrees`, `yaw_rpm`, and
-  `pitch_rpm` from compute's success table onto `aim_opts` when
-  present. Do not add parent keys onto that table. Do not nest
-  it. Those four names are not parent `opts` keys.
+- Copy `yaw_degrees` and `pitch_degrees` from compute's success
+  table onto `aim_opts` when present. Do not copy other compute
+  output fields. Do not add parent keys onto that table. Do not
+  nest it. Those two names are not parent `opts` keys.
+  `yaw_rpm` and `pitch_rpm` copy from parent `opts`.
 - `on_target` is not coerced (`1` / `"true"` fail).
 - `fired` is not read from fire. It is whether fire ran.
 

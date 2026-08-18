@@ -122,9 +122,10 @@ The parent does not contain `while true`.
    tracks (including operator selection) and returns a firing
    solution under Going Ballistic physics.
 2. Call `aim_turret_at_target` with that child's advertised
-   inputs. Engage copies `yaw_degrees`, `pitch_degrees`,
-   `yaw_rpm`, and `pitch_rpm` from compute's success table onto
-   `aim_opts`. The caller does not supply those keys. Aim is one
+   inputs. Engage copies `yaw_degrees` and `pitch_degrees` from
+   compute's success table onto `aim_opts`. `yaw_rpm` and
+   `pitch_rpm` come from parent `opts`. The caller does not
+   supply the degree keys. Aim is one
    kinetic step, not a wait until aligned.
 3. If aim reports the gun is on the solution this step, call
    `fire_rotating_barrel` with that child's advertised inputs.
@@ -181,31 +182,38 @@ cannot name the axes. Those four names are required.
 `fire_rotating_barrel` is on the ainterface. Its `side` is
 required on every engage call. Its `relay_name` is optional.
 
-When tickets #6 and #7 add rows, engage's legal `opts` keys
-become the union of those two input maps with the keys above, except a child key
-that names yaw bearing, pitch bearing, yaw motor, or pitch motor
-under a string other than `yaw_bearing_name`,
-`pitch_bearing_name`, `yaw_motor_name`, or `pitch_motor_name`,
-and except the firing-solution keys `aim_turret_at_target`
-lists: `yaw_degrees`, `pitch_degrees`, `yaw_rpm`, and
-`pitch_rpm`. Those four parent axis names stay required. They
-are not dropped, and the child's different strings are not
+`compute_ballistic_aim` is on the ainterface. Its required keys
+(`muzzle_x`, `muzzle_y`, `muzzle_z`, `projectile_mass_kg`,
+`powder_mass_kg`, `charge_length_meters`, `barrel_length_meters`)
+are required on every engage call. Its optional keys are legal
+as that child lists them.
+
+`aim_turret_at_target` is on the ainterface. `yaw_rpm` and
+`pitch_rpm` are required parent keys (compute does not output
+them). `yaw_degrees` and `pitch_degrees` are not parent `opts`
+keys. Presence on parent `opts` is unknown and fails
+loud. Parent parse does not require them, even if the aim child
+lists them required. Engage copies them from compute's success
+table onto `aim_opts`. It does not copy them from
+parent `opts`. Optional aim keys (`track_id`,
+`yaw_tolerance_degrees`, `pitch_tolerance_degrees`) are legal as
+that child lists them.
+
+A child key that names yaw bearing, pitch bearing, yaw motor, or
+pitch motor under a string other than `yaw_bearing_name`,
+`pitch_bearing_name`, `yaw_motor_name`, or `pitch_motor_name`
+is not a parent key. Those four parent axis names stay required.
+They are not dropped, and the child's different strings are not
 added as second parent keys. Engage copies each parent axis
 value onto a child `opts` under the name that child lists for
 that role: a rename when the strings differ, a same-key copy
 when they match. If a caller puts both `yaw_bearing_name` and a
 child's different yaw key on `opts`, the child's key is unknown
 and fails loud; the parent name is the only legal key for that
-role. Those four firing-solution keys are not parent `opts`
-keys. Presence on parent `opts` is unknown and fails
-loud. Parent parse does not require them, even if the aim child
-lists them required. Engage copies them from compute's success
-table onto `aim_opts`. It does not copy them from
-parent `opts`. `side` and `relay_name` are the fire-child keys
-now listed. `side` is required on every engage call and fails at
+role. `side` is required on every engage call and fails at
 parent parse, not after aim reports on-target. Engage forwards
 those keys unchanged when fire runs. Engage forwards non-axis,
-non-solution child keys unchanged. This ticket does not invent
+non-degree child keys unchanged. This ticket does not invent
 barrel internals.
 
 Forwarding is by ainterface names. Engage `dofile`s each

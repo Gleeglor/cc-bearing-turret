@@ -45,21 +45,24 @@ here. Consume children by `dofile` of their modules and calling names on
 Lua takes one `opts` table. Optional `radar_name` and `monitor_name`.
 Required `yaw_bearing_name`, `pitch_bearing_name`, `yaw_motor_name`,
 `pitch_motor_name`. Those four names are the only legal parent keys
-for those roles. `side` is required (`fire_rotating_barrel`).
-`relay_name` is optional. Child keys from #6 and #7 join that table
-when those rows exist, except a child string that names one of those
-four roles under a different key, and except the aim child's
-firing-solution keys `yaw_degrees`, `pitch_degrees`, `yaw_rpm`, and
-`pitch_rpm`.
+for those roles. `yaw_rpm` and `pitch_rpm` are required (aim; not
+from compute). `side` is required (`fire_rotating_barrel`).
+`relay_name` is optional. Compute required keys (`muzzle_x`,
+`muzzle_y`, `muzzle_z`, `projectile_mass_kg`, `powder_mass_kg`,
+`charge_length_meters`, `barrel_length_meters`) are required.
+Other listed compute and aim keys join that table as the children
+list them, except a child string that names one of those four roles
+under a different key, and except `yaw_degrees` and `pitch_degrees`.
 Those excepted strings are not parent keys; if present they are
 unknown and fail loud. Engage forwards each parent axis value under
 the name the child lists. If both the parent name and the child's
 different string are present, the child's string is unknown and
 fails loud. Fire-required keys from #4 (`side`) fail at parent parse on every
 call; off-target skip is not a pass on a missing fire key. Parent
-parse does not require those four firing-solution keys, even if
-aim lists them required. Engage copies those keys from compute's
-success table onto `aim_opts`. Success is one table: `on_target`,
+parse does not require `yaw_degrees` or `pitch_degrees`, even if
+aim lists them required. Engage copies those two keys from compute's
+success table onto `aim_opts`. `yaw_rpm` and `pitch_rpm` copy from
+parent `opts`. Success is one table: `on_target`,
 `fired`.
 
 Paper: [paper](paper.md).

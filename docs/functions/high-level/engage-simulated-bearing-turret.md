@@ -50,23 +50,41 @@ Exactly one table `opts`. Arity 1.
 - `pitch_bearing_name`: required string (Simulated swivel, pitch)
 - `yaw_motor_name`: required string (`electric_motor` on yaw)
 - `pitch_motor_name`: required string (`electric_motor` on pitch)
+- `yaw_rpm`: required finite number (forwarded to aim; not from
+  compute)
+- `pitch_rpm`: required finite number (forwarded to aim; not from
+  compute)
 - `side`: required string (ComputerCraft side for the fire face;
   `fire_rotating_barrel` required key; required on every call)
 - `relay_name`: optional string (`redstone_relay` name;
   `fire_rotating_barrel` optional key)
+- `muzzle_x`, `muzzle_y`, `muzzle_z`: required finite numbers
+  (`compute_ballistic_aim`)
+- `projectile_mass_kg`, `powder_mass_kg`, `charge_length_meters`,
+  `barrel_length_meters`: required finite numbers
+  (`compute_ballistic_aim`)
+- `track`: optional table (`compute_ballistic_aim`)
+- `trajectory`, `projectile_kind`: optional strings
+  (`compute_ballistic_aim`)
+- `max_ticks`, `gravity_multiplier`, `drag_multiplier`,
+  `muzzle_velocity_blocks_per_tick`: optional numbers
+  (`compute_ballistic_aim`)
+- `track_id`: optional string (`aim_turret_at_target`)
+- `yaw_tolerance_degrees`, `pitch_tolerance_degrees`: optional
+  finite numbers (`aim_turret_at_target`)
 
 Omit key, nil, or empty string for `radar_name`, `monitor_name`,
-or `relay_name` means discover or omit, forwarded to children
-that list those keys.
+`relay_name`, `track_id`, `trajectory`, or `projectile_kind`
+means discover or omit, forwarded to children that list those
+keys.
 
 Empty string is not legal for the four axis names. Those names
 are required. The gun has two swivels and two motors.
 
-When `compute_ballistic_aim`, `aim_turret_at_target`, or
-`fire_rotating_barrel` lists further input keys on
-`ainterface.json`, those keys are also legal on this same `opts`
-table and are required or optional exactly as that child lists
-them, except two classes of child key.
+Child-listed keys from `compute_ballistic_aim`,
+`aim_turret_at_target`, and `fire_rotating_barrel` are legal on
+this same `opts` table and are required or optional exactly as
+that child lists them, except two classes of child key.
 
 The first exception is a child key that names yaw bearing, pitch
 bearing, yaw motor, or pitch motor under a string other than
@@ -80,25 +98,30 @@ If both a parent axis name and a child's different string for
 that role are present, the child's string is unknown and fails
 loud.
 
-The second exception is the firing-solution keys
-`aim_turret_at_target` lists: `yaw_degrees`, `pitch_degrees`,
-`yaw_rpm`, and `pitch_rpm`. Those keys are not parent `opts`
-keys. If any is present on parent `opts`, it is unknown and
-fails loud. Parent parse does not require them, even if the aim
-child lists them required. The caller does not pass a firing
-solution. Engage does not copy those keys from parent `opts`.
-After compute returns a success table, engage copies those four
-keys from that table onto `aim_opts`. It does not nest them.
-Missing keys on the compute table still go to the child; engage
-does not invent degrees or RPM.
+The second exception is the ballistic degree keys
+`aim_turret_at_target` lists: `yaw_degrees` and `pitch_degrees`.
+Those keys are not parent `opts` keys. If either is present on
+parent `opts`, it is unknown and fails loud. Parent parse does
+not require them, even if the aim child lists them required.
+The caller does not pass a firing solution. Engage does not copy
+those keys from parent `opts`. After compute returns a success
+table, engage copies `yaw_degrees` and `pitch_degrees` from that
+table onto `aim_opts`. It does not nest the table. It does not
+copy other compute output fields onto `aim_opts`. Missing degree
+keys on the compute table still go to the child; engage does not
+invent degrees. `yaw_rpm` and `pitch_rpm` are parent keys. Aim
+lists them required; compute does not output them. Engage copies
+them from parent `opts` onto `aim_opts`. Engage does not invent
+RPM.
 
 Engage does not invent ballistic or fire internals.
 
-Fire-child required keys are required on every call of this
-command. Parent parse fails loud if a fire-required key is
-missing, even when this step will skip fire. The on-target gate
-chooses whether fire runs. It does not defer envelope checks.
-A missing fire-required key is not an off-target success.
+Compute-child required keys, aim RPM keys, and fire-child
+required keys are required on every call of this command. Parent
+parse fails loud if any of those is missing, even when this step
+will skip fire. The on-target gate chooses whether fire runs. It
+does not defer envelope checks. A missing required key is not an
+off-target success.
 
 ## Outputs
 
@@ -134,9 +157,9 @@ under the callees.
   loud
 - `yaw_bearing_name` equal to `pitch_bearing_name` fails loud
 - `yaw_motor_name` equal to `pitch_motor_name` fails loud
-- Missing fire-child required key fails loud at parent parse,
-  same as other required `opts` keys; do not wait for
-  `on_target` true
+- Missing compute-child required key, `yaw_rpm`, `pitch_rpm`, or
+  fire-child required key fails loud at parent parse, same as
+  other required `opts` keys; do not wait for `on_target` true
 - No selected radar pose this step fails loud (callee contract:
   compute fails; engage does not pick another track)
 - Compute success that is not a table fails loud
