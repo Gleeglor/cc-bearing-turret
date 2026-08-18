@@ -20,8 +20,11 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Code
 
-- #6 Aim Turret At Target
 - #3 Set Electric Motor Speed
+
+## Tests
+
+- #6 Aim Turret At Target
 
 ## Docs
 
