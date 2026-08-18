@@ -1,0 +1,16 @@
+{
+  "name": "cc-bearing-turret",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start:docs": "vitepress dev docs --port 45281 --host 127.0.0.1",
+    "build:docs": "vitepress build docs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}

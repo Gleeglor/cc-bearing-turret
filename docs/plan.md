@@ -1,6 +1,6 @@
 # Plan
 
-Active focus: Vestibule research for Read Radar Tracks (first child of
-the bearing-turret bundle).
+Active focus: Fourth Circle for Read Radar Tracks (#1). Docs
+passed. Next artifact is production Lua.
 
-- [Read Radar Tracks](nickify/2.md)
+- [Read Radar Tracks](https://github.com/Gleeglor/cc-bearing-turret/issues/1)
