@@ -31,4 +31,8 @@ turret. Product features stay out of this catalog.
 
 ## High-level
 
-(none)
+- [Aim Turret At Target](/functions/high-level/aim-turret-at-target) -
+  high-level specialized task script; one dual-axis tick: confirm
+  a live radar target and drive yaw and pitch Simulated swivels
+  toward caller-supplied ballistic degrees; return `{ on_target }`
+  (`bearing_turret.aim_turret_at_target`)

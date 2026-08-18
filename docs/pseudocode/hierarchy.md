@@ -18,15 +18,17 @@ Leaves are ainterface commands. On `ainterface.json` now:
 `bearing_turret.read_radar_tracks`,
 `bearing_turret.read_swivel_bearing_angle`,
 `bearing_turret.set_electric_motor_speed`,
-`bearing_turret.fire_rotating_barrel`, and
-`bearing_turret.rotate_bearing_toward_angle`. Other names join the
+`bearing_turret.fire_rotating_barrel`,
+`bearing_turret.rotate_bearing_toward_angle`, and
+`bearing_turret.aim_turret_at_target`. Other names join the
 contract when their tickets enter the Vestibule. Non-leaf names
 are this topic's functions. They are not other topics.
 
 Lua call this ticket:
-`bearing_turret.rotate_bearing_toward_angle(opts)`. `opts` is a
-table of ainterface input keys. `target_degrees` and `rpm` are
-required. Success is one Lua number, signed shortest-path error.
+`bearing_turret.aim_turret_at_target(opts)`. `opts` is a table of
+ainterface input keys. `yaw_degrees`, `pitch_degrees`,
+`yaw_rpm`, and `pitch_rpm` are required. Success is one table
+(`on_target`).
 
 ## bearing_turret.engage_simulated_bearing_turret
 
@@ -83,7 +85,12 @@ Going Ballistic has no ComputerCraft API. Lead is computed in Lua.
 ## bearing_turret.aim_turret_at_target
 
 [#6](https://github.com/Gleeglor/cc-bearing-turret/issues/6).
-Advanced. No research page yet.
+High-level specialized script. On the ainterface this ticket.
+
+- [Overview](/research/6/overview)
+- [Paper](/research/6/paper)
+- [Functional](/functions/high-level/aim-turret-at-target)
+- [Technical](/functions/high-level/aim-turret-at-target.technical)
 
 ### Who
 
@@ -91,20 +98,25 @@ ComputerCraft program on the gun computer.
 
 ### What
 
-Drive yaw and pitch bearings to a commanded angle.
+Confirm a live radar target this tick and drive yaw and pitch
+Simulated swivel bearings one dual-axis control tick toward
+caller-supplied ballistic degrees. Report whether both axes are
+on target this step.
 
 ### When
 
-A firing solution or angle command exists.
+A firing solution exists and a Create Radar dish is attached.
 
 ### Where
 
-Kinetic motors on Simulated swivel bearings.
+Amazeballs world. Kinetic motors on Simulated yaw and pitch
+swivel bearings.
 
 ### Why
 
-Native swivel ComputerCraft is read-only. Motors are the write
-path.
+Create Radar yaw and pitch controllers drive cannon mounts, not
+this Lua path. This command aims bearings at a solution. It does
+not compute Going Ballistic physics.
 
 ## bearing_turret.rotate_bearing_toward_angle
 

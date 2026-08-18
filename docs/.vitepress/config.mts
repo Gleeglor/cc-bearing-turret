@@ -37,6 +37,8 @@ export default defineConfig({
           { text: "4 Paper", link: "/research/4/paper" },
           { text: "5 Overview", link: "/research/5/overview" },
           { text: "5 Paper", link: "/research/5/paper" },
+          { text: "6 Overview", link: "/research/6/overview" },
+          { text: "6 Paper", link: "/research/6/paper" },
         ],
       },
       {
@@ -79,6 +81,14 @@ export default defineConfig({
           {
             text: "Rotate Bearing Toward Angle Technical",
             link: "/functions/advanced/rotate-bearing-toward-angle.technical",
+          },
+          {
+            text: "Aim Turret At Target",
+            link: "/functions/high-level/aim-turret-at-target",
+          },
+          {
+            text: "Aim Turret At Target Technical",
+            link: "/functions/high-level/aim-turret-at-target.technical",
           },
         ],
       },
