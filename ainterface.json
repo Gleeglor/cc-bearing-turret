@@ -47,6 +47,20 @@
         "rpm": "required finite Lua number; passed to setSpeed as a number; Java clamps to configured RPM range"
       },
       "outputs": {}
+    },
+    {
+      "name": "fire_rotating_barrel",
+      "who": "ComputerCraft program on the gun computer",
+      "what": "pulse analog strength 1 for two game ticks on the Create Big Cannons mount fire face, then 0, so the rotating autocannon fires once",
+      "when": "the barrel loop is spinning and a shot is wanted",
+      "where": "Amazeballs world. Mount fire face, separate from the aim motors. ComputerCraft redstone API or a redstone_relay on that face",
+      "why": "Create Big Cannons has no ComputerCraft fire method; the native trigger is analog redstone on the mount fire face. Aim does not pull the trigger",
+      "call": "Lua bearing_turret.fire_rotating_barrel(opts); opts is a table; success is no return values",
+      "inputs": {
+        "side": "required string on the Lua opts table; ComputerCraft side name: top, bottom, left, right, front, or back",
+        "relay_name": "optional string on the Lua opts table; redstone_relay peripheral name; omit key, nil, or empty string to use the computer redstone API"
+      },
+      "outputs": {}
     }
   ]
 }

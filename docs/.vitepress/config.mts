@@ -33,6 +33,8 @@ export default defineConfig({
           { text: "2 Paper", link: "/research/2/paper" },
           { text: "3 Overview", link: "/research/3/overview" },
           { text: "3 Paper", link: "/research/3/paper" },
+          { text: "4 Overview", link: "/research/4/overview" },
+          { text: "4 Paper", link: "/research/4/paper" },
         ],
       },
       {
@@ -59,6 +61,14 @@ export default defineConfig({
           {
             text: "Set Electric Motor Speed Technical",
             link: "/functions/basic/set-electric-motor-speed.technical",
+          },
+          {
+            text: "Fire Rotating Barrel",
+            link: "/functions/basic/fire-rotating-barrel",
+          },
+          {
+            text: "Fire Rotating Barrel Technical",
+            link: "/functions/basic/fire-rotating-barrel.technical",
           },
         ],
       },

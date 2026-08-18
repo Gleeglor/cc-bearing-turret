@@ -11,7 +11,6 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 - #7 Compute Ballistic Aim
 - #6 Aim Turret At Target
 - #5 Rotate Bearing Toward Angle
-- #4 Fire Rotating Barrel
 
 ## Vestibule
 
@@ -23,7 +22,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Code
 
-- #3 Set Electric Motor Speed
+(none)
 
 ## Tests
 
@@ -31,7 +30,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Compare
 
-(none)
+- #4 Fire Rotating Barrel
 
 ## Blocked
 
