@@ -662,12 +662,28 @@ expect_error("pitch_motor_name table", function()
 end, "pitch_motor_name must be a string or nil, got table")
 
 run("empty radar and monitor names are absent", function()
-  live_dish("uuid-1")
+  local previous_radar = package.loaded["read_radar_tracks.lua"]
+  local radar_calls = {}
+  package.loaded["read_radar_tracks.lua"] = {
+    read_radar_tracks = function(child_opts)
+      radar_calls[#radar_calls + 1] = child_opts
+      return {
+        tracks = { valid_row("uuid-1") },
+      }
+    end,
+  }
   local opts = base_opts()
   opts.radar_name = ""
   opts.monitor_name = ""
-  local result = aim_turret_at_target(opts)
+  local ok, result = pcall(aim_turret_at_target, opts)
+  package.loaded["read_radar_tracks.lua"] = previous_radar
+  if not ok then
+    error(result)
+  end
   expect_equal("empty radar names on_target", result.on_target, true)
+  expect_equal("empty radar child call count", #radar_calls, 1)
+  expect_equal("empty radar_name omitted", radar_calls[1].radar_name, nil)
+  expect_equal("empty monitor_name omitted", radar_calls[1].monitor_name, nil)
 end)
 
 run("empty motor names omitted on children", function()
