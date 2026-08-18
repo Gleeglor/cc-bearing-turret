@@ -33,6 +33,8 @@ are required. Success is one table (`on_target`, `fired`).
 Parent [#8](https://github.com/Gleeglor/cc-bearing-turret/issues/8).
 High-level specialized script.
 
+- [Functional](/functions/high-level/engage-simulated-bearing-turret)
+- [Technical](/functions/high-level/engage-simulated-bearing-turret.technical)
 - [Overview](/research/8/overview)
 - [Paper](/research/8/paper)
 
@@ -73,7 +75,7 @@ Turn a track pose into a firing solution.
 
 ### When
 
-A track is selected or chosen.
+A selected radar pose exists.
 
 ### Where
 

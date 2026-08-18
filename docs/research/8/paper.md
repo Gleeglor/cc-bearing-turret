@@ -104,7 +104,7 @@ bearing_turret.engage_simulated_bearing_turret
 `read_radar_tracks` sits under compute and aim, not under engage.
 `rotate_bearing_toward_angle`, `read_swivel_bearing_angle`, and
 `set_electric_motor_speed` sit under aim, not under engage.
-Engage consumes children by requiring their Lua modules and
+Engage consumes children by `dofile` of their Lua modules and
 calling the names on `ainterface.json`. It does not copy their
 bodies.
 
@@ -122,9 +122,11 @@ The parent does not contain `while true`.
    tracks (including operator selection) and returns a firing
    solution under Going Ballistic physics.
 2. Call `aim_turret_at_target` with that child's advertised
-   inputs plus the solution from step 1. The caller does not
-   supply the solution. Aim is one kinetic step, not a wait
-   until aligned.
+   inputs. Engage writes compute's success table onto `aim_opts`
+   under the input name that child advertises for the firing
+   solution. Until that row names a key, that name is
+   `solution`. The caller does not supply that key. Aim is one
+   kinetic step, not a wait until aligned.
 3. If aim reports the gun is on the solution this step, call
    `fire_rotating_barrel` with that child's advertised inputs.
    If aim reports off-target, skip fire. That skip is success,
@@ -156,6 +158,9 @@ That report is the child's advertised output. Engage maps it to
 parent output `on_target`. Parent output `fired` is true only
 when the fire child actually ran.
 
+The gate is the call, not the envelope. A missing fire-required
+key fails this call even when fire would have been skipped.
+
 Aim's on-target test (tolerance, both axes, stored servo vs
 visual) lives in #6. Engage does not re-read bearings to second
 guess it.
@@ -175,15 +180,36 @@ The gun has two swivels and two motors. Discover-exactly-one
 cannot name the axes. Those four names are required.
 
 When tickets #4, #6, and #7 add rows, engage's legal `opts` keys
-become the union of those three input maps, plus the four axis
-names if the children use different key strings. Parent fills
-solution fields that pass from compute to aim. The caller does
-not pass those fields. Fire-child keys that #4 lists are legal
-on the same table once that row exists; engage forwards them
-unchanged. This ticket does not invent barrel internals.
+become the union of those three input maps, except a child key
+that names yaw bearing, pitch bearing, yaw motor, or pitch motor
+under a string other than `yaw_bearing_name`,
+`pitch_bearing_name`, `yaw_motor_name`, or `pitch_motor_name`,
+and except the input name `aim_turret_at_target` advertises for
+the firing solution. Until that row names a key, that name is
+`solution`. Those four parent axis names stay required. They
+are not dropped, and the child's different strings are not
+added as second parent keys. Engage copies each parent axis
+value onto a child `opts` under the name that child lists for
+that role: a rename when the strings differ, a same-key copy
+when they match. If a caller puts both `yaw_bearing_name` and a
+child's different yaw key on `opts`, the child's key is unknown
+and fails loud; the parent name is the only legal key for that
+role. The aim child's firing-solution input is not a parent
+`opts` key. Presence on parent `opts` is unknown and fails
+loud. Parent parse does not require it, even if the aim child
+lists it required. Engage writes compute's success table onto
+`aim_opts` under that name only. It does not copy that key from
+parent `opts`. Fire-child keys that #4 lists are legal on the
+same table once that row exists, unless they are one of those
+four axis roles under a different string. Keys #4 lists as
+required are required on every engage call and fail at parent
+parse, not after aim reports on-target. Engage forwards those
+keys unchanged when fire runs. Engage forwards non-axis,
+non-solution child keys unchanged. This ticket does not invent
+barrel internals.
 
-Forwarding is by ainterface names. Engage `dofile`s (or
-`require`s) each child's module and calls
+Forwarding is by ainterface names. Engage `dofile`s each
+child's module and calls
 `bearing_turret.<command>(child_opts)`. It does not call
 `getTracks`, `getTargetAngle`, `setSpeed`, or Radar
 `setAngle`.

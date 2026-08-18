@@ -24,4 +24,8 @@ turret. Product features stay out of this catalog.
 
 ## High-level
 
-(none)
+- [Engage Simulated Bearing Turret](/functions/high-level/engage-simulated-bearing-turret)
+  - one engagement step: ballistic solution from the selected
+  radar track, aim Simulated yaw and pitch bearings, fire only
+  when on target (`bearing_turret.engage_simulated_bearing_turret`).
+  Specialized task script.

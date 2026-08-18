@@ -14,11 +14,11 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Vestibule
 
-- #8 Engage Simulated Bearing Turret (parent, high-level)
+(none)
 
 ## Docs
 
-(none)
+- #8 Engage Simulated Bearing Turret (parent, high-level)
 
 ## Code
 

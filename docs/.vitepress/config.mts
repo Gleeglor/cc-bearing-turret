@@ -62,6 +62,14 @@ export default defineConfig({
             text: "Set Electric Motor Speed Technical",
             link: "/functions/basic/set-electric-motor-speed.technical",
           },
+          {
+            text: "Engage Simulated Bearing Turret",
+            link: "/functions/high-level/engage-simulated-bearing-turret",
+          },
+          {
+            text: "Engage Simulated Bearing Turret Technical",
+            link: "/functions/high-level/engage-simulated-bearing-turret.technical",
+          },
         ],
       },
     ],
