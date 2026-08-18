@@ -80,6 +80,27 @@
       "outputs": {
         "error_degrees": "one Lua number; signed shortest-path error in degrees from the stored servo target to target_degrees; positive means the stored field must increase; Java remainder negatives from the child read are allowed and wrapped here; 180 chooses the positive path; magnitude is at most 180; leftover inside the tolerance band is still returned, including when the motor is commanded 0; success is not 0 merely because the motor stopped"
       }
+    },
+    {
+      "name": "aim_turret_at_target",
+      "who": "ComputerCraft program on the gun computer",
+      "what": "confirm a live radar target this tick and drive yaw and pitch Simulated swivel bearings to caller-supplied ballistic degrees",
+      "when": "a firing solution exists and a Create Radar dish is attached",
+      "where": "Amazeballs world; kinetic motors on Simulated yaw and pitch swivel bearings",
+      "why": "Create Radar yaw and pitch controllers drive cannon mounts, not this Lua path; this command aims bearings at a solution and does not compute Going Ballistic physics",
+      "call": "Lua bearing_turret.aim_turret_at_target(opts); opts is a table; success is no return values",
+      "inputs": {
+        "yaw_degrees": "required finite Lua number; bearing-local degrees for the yaw swivel; from the caller (compute_ballistic_aim)",
+        "pitch_degrees": "required finite Lua number; bearing-local degrees for the pitch swivel; from the caller (compute_ballistic_aim)",
+        "track_id": "optional string on the Lua opts table; live radar track id to require this tick; omit key, nil, or empty string to use the monitor selectedTrackId from read_radar_tracks",
+        "radar_name": "optional string on the Lua opts table; forwarded to read_radar_tracks",
+        "monitor_name": "optional string on the Lua opts table; forwarded to read_radar_tracks",
+        "yaw_bearing_name": "optional string on the Lua opts table; forwarded to rotate_bearing_toward_angle for the yaw axis",
+        "pitch_bearing_name": "optional string on the Lua opts table; forwarded to rotate_bearing_toward_angle for the pitch axis",
+        "yaw_motor_name": "optional string on the Lua opts table; forwarded to rotate_bearing_toward_angle for the yaw axis",
+        "pitch_motor_name": "optional string on the Lua opts table; forwarded to rotate_bearing_toward_angle for the pitch axis"
+      },
+      "outputs": {}
     }
   ]
 }

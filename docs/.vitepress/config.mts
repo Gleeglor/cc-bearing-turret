@@ -37,6 +37,8 @@ export default defineConfig({
           { text: "4 Paper", link: "/research/4/paper" },
           { text: "5 Overview", link: "/research/5/overview" },
           { text: "5 Paper", link: "/research/5/paper" },
+          { text: "6 Overview", link: "/research/6/overview" },
+          { text: "6 Paper", link: "/research/6/paper" },
         ],
       },
       {

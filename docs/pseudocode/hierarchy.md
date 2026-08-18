@@ -18,15 +18,16 @@ Leaves are ainterface commands. On `ainterface.json` now:
 `bearing_turret.read_radar_tracks`,
 `bearing_turret.read_swivel_bearing_angle`,
 `bearing_turret.set_electric_motor_speed`,
-`bearing_turret.fire_rotating_barrel`, and
-`bearing_turret.rotate_bearing_toward_angle`. Other names join the
+`bearing_turret.fire_rotating_barrel`,
+`bearing_turret.rotate_bearing_toward_angle`, and
+`bearing_turret.aim_turret_at_target`. Other names join the
 contract when their tickets enter the Vestibule. Non-leaf names
 are this topic's functions. They are not other topics.
 
 Lua call this ticket:
-`bearing_turret.rotate_bearing_toward_angle(opts)`. `opts` is a
-table of ainterface input keys. `target_degrees` and `rpm` are
-required. Success is one Lua number, signed shortest-path error.
+`bearing_turret.aim_turret_at_target(opts)`. `opts` is a table of
+ainterface input keys. `yaw_degrees` and `pitch_degrees` are
+required. Success is no return values.
 
 ## bearing_turret.engage_simulated_bearing_turret
 
@@ -83,7 +84,10 @@ Going Ballistic has no ComputerCraft API. Lead is computed in Lua.
 ## bearing_turret.aim_turret_at_target
 
 [#6](https://github.com/Gleeglor/cc-bearing-turret/issues/6).
-Advanced. No research page yet.
+Advanced.
+
+- [Overview](/research/6/overview)
+- [Paper](/research/6/paper)
 
 ### Who
 

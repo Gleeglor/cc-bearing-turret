@@ -9,11 +9,10 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 - #8 Engage Simulated Bearing Turret (parent, high-level)
 - #7 Compute Ballistic Aim
-- #6 Aim Turret At Target
 
 ## Vestibule
 
-(none)
+- #6 Aim Turret At Target
 
 ## Docs
 
