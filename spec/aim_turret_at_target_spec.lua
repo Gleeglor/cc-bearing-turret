@@ -184,6 +184,7 @@ run("happy path on_target true default tolerance", function()
   expect_equal("yaw motor", rotate_log.calls[1].motor_name, "yaw_motor")
   expect_equal("yaw no parent key", rotate_log.calls[1].yaw_degrees, nil)
   expect_equal("yaw omit tolerance", rotate_log.calls[1].tolerance_degrees, nil)
+  expect_equal("pitch omit tolerance", rotate_log.calls[2].tolerance_degrees, nil)
   expect_equal("pitch target", rotate_log.calls[2].target_degrees, 5)
   expect_equal("pitch rpm", rotate_log.calls[2].rpm, -16)
   expect_equal("pitch bearing", rotate_log.calls[2].bearing_name, "pitch_swivel")
@@ -505,7 +506,7 @@ end)
 
 expect_error("read_radar_tracks missing dish", function()
   aim_turret_at_target(base_opts())
-end, "read_radar_tracks failed:")
+end, "read_radar_tracks failed: Read Radar Tracks: no radar peripheral attached")
 
 run("omit axis names does not send child name keys", function()
   live_dish("uuid-1")
@@ -521,6 +522,250 @@ run("omit axis names does not send child name keys", function()
   expect_equal("omit yaw motor", rotate_log.calls[1].motor_name, nil)
   expect_equal("omit pitch bearing", rotate_log.calls[2].bearing_name, nil)
   expect_equal("omit pitch motor", rotate_log.calls[2].motor_name, nil)
+end)
+
+expect_error("nil opts", function()
+  aim_turret_at_target(nil)
+end, "inputs must be a table, got nil")
+
+expect_error("opts wrap table", function()
+  live_dish("uuid-1")
+  local wrapped = bus.wraps.radar_1
+  aim_turret_at_target(wrapped)
+end, "unknown input '")
+
+expect_error("yaw_degrees inf", function()
+  local opts = base_opts()
+  opts.yaw_degrees = math.huge
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_degrees must be a finite number, got inf")
+
+expect_error("yaw_degrees negative inf", function()
+  local opts = base_opts()
+  opts.yaw_degrees = -math.huge
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_degrees must be a finite number, got inf")
+
+expect_error("pitch_degrees string", function()
+  local opts = base_opts()
+  opts.pitch_degrees = "5"
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_degrees must be a number, got string")
+
+expect_error("pitch_degrees nan", function()
+  local opts = base_opts()
+  opts.pitch_degrees = 0 / 0
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_degrees must be a finite number, got nan")
+
+expect_error("pitch_degrees inf", function()
+  local opts = base_opts()
+  opts.pitch_degrees = math.huge
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_degrees must be a finite number, got inf")
+
+expect_error("yaw_rpm string", function()
+  local opts = base_opts()
+  opts.yaw_rpm = "32"
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_rpm must be a number, got string")
+
+expect_error("yaw_rpm nan", function()
+  local opts = base_opts()
+  opts.yaw_rpm = 0 / 0
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_rpm must be a finite number, got nan")
+
+expect_error("yaw_rpm inf", function()
+  local opts = base_opts()
+  opts.yaw_rpm = math.huge
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_rpm must be a finite number, got inf")
+
+expect_error("pitch_rpm string", function()
+  local opts = base_opts()
+  opts.pitch_rpm = "16"
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_rpm must be a number, got string")
+
+expect_error("pitch_rpm nan", function()
+  local opts = base_opts()
+  opts.pitch_rpm = 0 / 0
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_rpm must be a finite number, got nan")
+
+run("negative degrees forwarded unchanged", function()
+  live_dish("uuid-1")
+  local opts = base_opts()
+  opts.yaw_degrees = -90
+  opts.pitch_degrees = 370
+  local result = aim_turret_at_target(opts)
+  expect_equal("negative yaw target", rotate_log.calls[1].target_degrees, -90)
+  expect_equal("unwrapped pitch target", rotate_log.calls[2].target_degrees, 370)
+  expect_equal("unwrapped on_target", result.on_target, true)
+end)
+
+run("equal yaw and pitch numbers are legal", function()
+  live_dish("uuid-1")
+  local opts = base_opts()
+  opts.yaw_degrees = 45
+  opts.pitch_degrees = 45
+  local result = aim_turret_at_target(opts)
+  expect_equal("equal yaw", rotate_log.calls[1].target_degrees, 45)
+  expect_equal("equal pitch", rotate_log.calls[2].target_degrees, 45)
+  expect_equal("equal on_target", result.on_target, true)
+end)
+
+expect_error("radar_name number", function()
+  local opts = base_opts()
+  opts.radar_name = 1
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "radar_name must be a string or nil, got number")
+
+expect_error("monitor_name boolean", function()
+  local opts = base_opts()
+  opts.monitor_name = true
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "monitor_name must be a string or nil, got boolean")
+
+expect_error("pitch_bearing_name number", function()
+  local opts = base_opts()
+  opts.pitch_bearing_name = 2
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_bearing_name must be a string or nil, got number")
+
+expect_error("yaw_motor_name number", function()
+  local opts = base_opts()
+  opts.yaw_motor_name = 3
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_motor_name must be a string or nil, got number")
+
+expect_error("pitch_motor_name table", function()
+  local opts = base_opts()
+  opts.pitch_motor_name = {}
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_motor_name must be a string or nil, got table")
+
+run("empty radar and monitor names are absent", function()
+  live_dish("uuid-1")
+  local opts = base_opts()
+  opts.radar_name = ""
+  opts.monitor_name = ""
+  local result = aim_turret_at_target(opts)
+  expect_equal("empty radar names on_target", result.on_target, true)
+end)
+
+run("empty motor names omitted on children", function()
+  live_dish("uuid-1")
+  local opts = base_opts()
+  opts.yaw_motor_name = ""
+  opts.pitch_motor_name = ""
+  aim_turret_at_target(opts)
+  expect_equal("empty yaw motor omitted", rotate_log.calls[1].motor_name, nil)
+  expect_equal("empty pitch motor omitted", rotate_log.calls[2].motor_name, nil)
+end)
+
+expect_error("yaw_tolerance string", function()
+  local opts = base_opts()
+  opts.yaw_tolerance_degrees = "1"
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_tolerance_degrees must be a number, got string")
+
+expect_error("yaw_tolerance empty string", function()
+  local opts = base_opts()
+  opts.yaw_tolerance_degrees = ""
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_tolerance_degrees must be a number, got string")
+
+expect_error("yaw_tolerance inf", function()
+  local opts = base_opts()
+  opts.yaw_tolerance_degrees = math.huge
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "yaw_tolerance_degrees must be a finite number, got inf")
+
+expect_error("pitch_tolerance nan", function()
+  local opts = base_opts()
+  opts.pitch_tolerance_degrees = 0 / 0
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_tolerance_degrees must be a finite number, got nan")
+
+expect_error("pitch_tolerance inf", function()
+  local opts = base_opts()
+  opts.pitch_tolerance_degrees = math.huge
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_tolerance_degrees must be a finite number, got inf")
+
+expect_error("pitch_tolerance negative", function()
+  local opts = base_opts()
+  opts.pitch_tolerance_degrees = -0.1
+  live_dish("uuid-1")
+  aim_turret_at_target(opts)
+end, "pitch_tolerance_degrees must be >= 0")
+
+run("tolerance 0 is legal", function()
+  live_dish("uuid-1")
+  local opts = base_opts()
+  opts.yaw_tolerance_degrees = 0
+  opts.pitch_tolerance_degrees = 0
+  rotate_log.results[1] = 0
+  rotate_log.results[2] = 0
+  local result = aim_turret_at_target(opts)
+  expect_equal("zero tolerance child yaw", rotate_log.calls[1].tolerance_degrees, 0)
+  expect_equal("zero tolerance on_target", result.on_target, true)
+end)
+
+expect_error("empty selectedTrackId is no target", function()
+  attach("radar_1", "create_radar:radar", dish_wrap({ valid_row("uuid-1") }))
+  attach("mon_1", "create_radar:monitor", monitor_wrap("", {}))
+  local opts = base_opts()
+  opts.track_id = nil
+  aim_turret_at_target(opts)
+end, "no radar target this tick")
+
+expect_error("track id is not case-folded", function()
+  live_dish("uuid-1")
+  local opts = base_opts()
+  opts.track_id = "UUID-1"
+  aim_turret_at_target(opts)
+end, "track 'UUID-1' is not in this tick's tracks")
+
+expect_error("track id is not a substring match", function()
+  live_dish("uuid-1")
+  local opts = base_opts()
+  opts.track_id = "uuid"
+  aim_turret_at_target(opts)
+end, "track 'uuid' is not in this tick's tracks")
+
+run("pitch rotate non-number", function()
+  live_dish("uuid-1")
+  rotate_log.results[2] = "ok"
+  local ok, err = pcall(aim_turret_at_target, base_opts())
+  expect_equal("pitch non-number pcall", ok, false)
+  local found = type(err) == "string" and
+    string.find(err, "pitch rotate returned string, expected number", 1, true) ~=
+      nil
+  expect_equal("pitch non-number message", found, true)
+  expect_equal("yaw already ran", #rotate_log.calls, 2)
 end)
 
 if failures > 0 then
