@@ -82,6 +82,43 @@
       }
     },
     {
+      "name": "compute_ballistic_aim",
+      "who": "ComputerCraft program on the gun computer",
+      "what": "compute yaw and pitch that intercept a radar track under Create Big Cannons Going Ballistic physics",
+      "when": "a track pose is known or a dish can supply selectedTrack; muzzle pose and Robins inputs are known",
+      "where": "same computer; Lua only; no peripheral write",
+      "why": "Going Ballistic has no ComputerCraft API; Create Radar controllers still use vanilla CBC ballistics; lead is computed in Lua",
+      "call": "Lua bearing_turret.compute_ballistic_aim(opts); arity 1; opts is a required table that must include every required input key; omitted, nil, or a non-table opts is not allowed; any other key must be an input name; success is one table; nested pitch/tick search does not yield; a ComputerCraft instruction-budget abort during that search is the host throw, unwrapped",
+      "inputs": {
+        "muzzle_x": "required finite Lua number; world-block X of the projectile spawn point",
+        "muzzle_y": "required finite Lua number; world-block Y of the projectile spawn point",
+        "muzzle_z": "required finite Lua number; world-block Z of the projectile spawn point",
+        "projectile_mass_kg": "required finite Lua number greater than 0; Going Ballistic projectile mass m",
+        "powder_mass_kg": "required finite Lua number greater than 0; Going Ballistic powder mass p",
+        "charge_length_meters": "required finite Lua number greater than 0; Going Ballistic powder-column length c",
+        "barrel_length_meters": "required finite Lua number greater than 0; Going Ballistic effective barrel length L",
+        "track": "optional table; Create Radar track row shape (id, position, velocity); omit to load via read_radar_tracks",
+        "radar_name": "optional string; omit key, nil, or empty string to discover; passed to read_radar_tracks only when track is omitted",
+        "monitor_name": "optional string; omit key, nil, or empty string to discover; passed to read_radar_tracks only when track is omitted",
+        "trajectory": "optional string; low or high elevation family; omit key, nil, or empty string means low; high with one family still returns that family",
+        "projectile_kind": "optional string; cannon, autocannon, or machine_gun; omit key, nil, or empty string means cannon",
+        "max_ticks": "optional finite Lua number equal to math.floor of itself, in 1 through 100000 inclusive; simulation cap in ticks; omit means 2000",
+        "gravity_multiplier": "optional finite Lua number; DimensionMunitionProperties gravityMultiplier; omit means 1",
+        "drag_multiplier": "optional finite Lua number >= 0; DimensionMunitionProperties dragMultiplier; omit means 1",
+        "muzzle_velocity_blocks_per_tick": "optional finite Lua number greater than 0; skip Robins and use this launch speed"
+      },
+      "outputs": {
+        "yaw_degrees": "one Lua number; Minecraft facing yaw, 0 = +Z south, positive toward -X west; 0 when horizontal range to lead is below 1e-9",
+        "pitch_degrees": "one Lua number; elevation from horizontal, positive muzzle up; inclusive -90 through 90",
+        "time_of_flight_ticks": "one Lua number; simulated intercept tick count",
+        "muzzle_velocity_blocks_per_tick": "one Lua number; launch speed used",
+        "impact_x": "one Lua number; simulated intercept world X",
+        "impact_y": "one Lua number; simulated intercept world Y",
+        "impact_z": "one Lua number; simulated intercept world Z",
+        "trajectory": "string low or high; echoes the request even when only one family exists"
+      }
+    },
+    {
       "name": "aim_turret_at_target",
       "who": "ComputerCraft program on the gun computer",
       "what": "confirm a live radar target this tick and drive yaw and pitch Simulated swivel bearings to caller-supplied ballistic degrees",

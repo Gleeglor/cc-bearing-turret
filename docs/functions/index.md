@@ -28,6 +28,9 @@ turret. Product features stay out of this catalog.
   - one closed-loop step: read one stored swivel target, command one
   motor toward a commanded angle, return signed shortest-path error
   (`bearing_turret.rotate_bearing_toward_angle`)
+- [Compute Ballistic Aim](/functions/advanced/compute-ballistic-aim) -
+  yaw and pitch that intercept a radar track under Going Ballistic
+  physics (`bearing_turret.compute_ballistic_aim`)
 
 ## High-level
 

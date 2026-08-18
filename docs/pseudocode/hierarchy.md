@@ -19,7 +19,8 @@ Leaves are ainterface commands. On `ainterface.json` now:
 `bearing_turret.read_swivel_bearing_angle`,
 `bearing_turret.set_electric_motor_speed`,
 `bearing_turret.fire_rotating_barrel`,
-`bearing_turret.rotate_bearing_toward_angle`, and
+`bearing_turret.rotate_bearing_toward_angle`,
+`bearing_turret.compute_ballistic_aim`, and
 `bearing_turret.aim_turret_at_target`. Other names join the
 contract when their tickets enter the Vestibule. Non-leaf names
 are this topic's functions. They are not other topics.
@@ -64,7 +65,12 @@ bearings.
 ## bearing_turret.compute_ballistic_aim
 
 [#7](https://github.com/Gleeglor/cc-bearing-turret/issues/7).
-Advanced. No research page yet.
+Advanced. On the ainterface this ticket.
+
+- [Overview](/research/7/overview)
+- [Paper](/research/7/paper)
+- [Functional](/functions/advanced/compute-ballistic-aim)
+- [Technical](/functions/advanced/compute-ballistic-aim.technical)
 
 ### Who
 
