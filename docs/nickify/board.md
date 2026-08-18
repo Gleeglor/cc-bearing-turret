@@ -19,7 +19,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Code
 
-- #8 Engage Simulated Bearing Turret (parent, high-level)
+(none)
 
 ## Tests
 
@@ -27,7 +27,7 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Compare
 
-(none)
+- #8 Engage Simulated Bearing Turret (parent, high-level)
 
 ## Blocked
 
