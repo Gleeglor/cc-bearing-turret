@@ -50,9 +50,14 @@ Exactly one table `opts`. Arity 1.
 - `pitch_bearing_name`: required string (Simulated swivel, pitch)
 - `yaw_motor_name`: required string (`electric_motor` on yaw)
 - `pitch_motor_name`: required string (`electric_motor` on pitch)
+- `side`: required string (ComputerCraft side for the fire face;
+  `fire_rotating_barrel` required key; required on every call)
+- `relay_name`: optional string (`redstone_relay` name;
+  `fire_rotating_barrel` optional key)
 
-Omit key, nil, or empty string for `radar_name` or `monitor_name`
-means discover, forwarded to children that list those keys.
+Omit key, nil, or empty string for `radar_name`, `monitor_name`,
+or `relay_name` means discover or omit, forwarded to children
+that list those keys.
 
 Empty string is not legal for the four axis names. Those names
 are required. The gun has two swivels and two motors.

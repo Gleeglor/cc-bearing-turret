@@ -179,8 +179,11 @@ Known keys on this ticket's ainterface row:
 The gun has two swivels and two motors. Discover-exactly-one
 cannot name the axes. Those four names are required.
 
-When tickets #4, #6, and #7 add rows, engage's legal `opts` keys
-become the union of those three input maps, except a child key
+`fire_rotating_barrel` is on the ainterface. Its `side` is
+required on every engage call. Its `relay_name` is optional.
+
+When tickets #6 and #7 add rows, engage's legal `opts` keys
+become the union of those two input maps with the keys above, except a child key
 that names yaw bearing, pitch bearing, yaw motor, or pitch motor
 under a string other than `yaw_bearing_name`,
 `pitch_bearing_name`, `yaw_motor_name`, or `pitch_motor_name`,
@@ -199,12 +202,10 @@ role. The aim child's firing-solution input is not a parent
 loud. Parent parse does not require it, even if the aim child
 lists it required. Engage writes compute's success table onto
 `aim_opts` under that name only. It does not copy that key from
-parent `opts`. Fire-child keys that #4 lists are legal on the
-same table once that row exists, unless they are one of those
-four axis roles under a different string. Keys #4 lists as
-required are required on every engage call and fail at parent
-parse, not after aim reports on-target. Engage forwards those
-keys unchanged when fire runs. Engage forwards non-axis,
+parent `opts`. `side` and `relay_name` are the fire-child keys
+now listed. `side` is required on every engage call and fails at
+parent parse, not after aim reports on-target. Engage forwards
+those keys unchanged when fire runs. Engage forwards non-axis,
 non-solution child keys unchanged. This ticket does not invent
 barrel internals.
 

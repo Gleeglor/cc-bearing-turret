@@ -95,7 +95,9 @@
         "yaw_bearing_name": "required string; Simulated swivel for yaw; only legal parent key for that role; copy onto each child that lists a yaw-bearing input, under the name that child lists; a child's different key string is not legal on this opts table",
         "pitch_bearing_name": "required string; Simulated swivel for pitch; only legal parent key for that role; copy onto each child that lists a pitch-bearing input, under the name that child lists; a child's different key string is not legal on this opts table",
         "yaw_motor_name": "required string; electric_motor on the yaw bearing; only legal parent key for that role; copy onto each child that lists a yaw-motor input, under the name that child lists; a child's different key string is not legal on this opts table",
-        "pitch_motor_name": "required string; electric_motor on the pitch bearing; only legal parent key for that role; copy onto each child that lists a pitch-motor input, under the name that child lists; a child's different key string is not legal on this opts table"
+        "pitch_motor_name": "required string; electric_motor on the pitch bearing; only legal parent key for that role; copy onto each child that lists a pitch-motor input, under the name that child lists; a child's different key string is not legal on this opts table",
+        "side": "required string on the Lua opts table; ComputerCraft side name: top, bottom, left, right, front, or back; fire_rotating_barrel required key; required at parent parse on every call, including off-target steps",
+        "relay_name": "optional string on the Lua opts table; redstone_relay peripheral name; fire_rotating_barrel optional key; omit key, nil, or empty string to use the computer redstone API"
       },
       "outputs": {
         "fired": "boolean; true only when fire_rotating_barrel ran this step",

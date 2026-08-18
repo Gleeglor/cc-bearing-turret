@@ -56,10 +56,12 @@ Check equal bearings before equal motors.
 
 Child-listed keys use that child's required/optional rule at
 parent parse, including `fire_rotating_barrel` keys, except the
-aim child's firing-solution input. A fire-required key missing
-from `opts` fails loud on this call, whether or not aim will
-report `on_target`. Do not wait until fire runs. Optional fire
-keys stay optional. A child string that names one of the four
+aim child's firing-solution input. `fire_rotating_barrel` is on
+the ainterface: `side` is required on every engage call;
+`relay_name` is optional (omit, nil, or `""` means omit). A
+fire-required key missing from `opts` fails loud on this call,
+whether or not aim will report `on_target`. Do not wait until
+fire runs. Optional fire keys stay optional. A child string that names one of the four
 axis roles under a different key is not legal on parent `opts`;
 if present, fail loud as an unknown input (before this
 required/optional pass). The input name `aim_turret_at_target`
