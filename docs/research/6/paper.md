@@ -138,39 +138,105 @@ Radar README; Simulated swivel wiki: side cog, center shaft
 pass-through). Yaw is one `swivel_bearing`. Pitch is another.
 Each has its own electric motor (ticket 3).
 
-Call `bearing_turret.rotate_bearing_toward_angle` twice, through
-the ainterface when ticket 5 has published it. Until then,
-require the sibling module `rotate_bearing_toward_angle.lua`
-without copying its loop, `getTargetAngle`, or `setSpeed`.
+Call `bearing_turret.rotate_bearing_toward_angle(opts)` twice
+through the ainterface, the same way this command already calls
+`bearing_turret.read_radar_tracks`. Child `opts` keys are
+`target_degrees`, `rpm`, and optionally `bearing_name`,
+`motor_name`, and `tolerance_degrees`. Do not copy rotate's
+loop, `getTargetAngle`, or `setSpeed`.
 
-- First call: yaw. Forward `yaw_degrees` as that command's
-  target angle, plus `yaw_bearing_name` and `yaw_motor_name`.
-- Second call: pitch. Forward `pitch_degrees`,
-  `pitch_bearing_name`, and `pitch_motor_name`.
-- If the yaw call fails, do not call pitch. Fail loud with that
-  error.
-- If the two name pairs are omitted, rotate's own discovery
-  applies. A gun with two swivels and two motors cannot discover
-  "exactly one". Callers name the axes. This command does not
-  invent a second discovery pass.
+Yaw first. Pitch second. If the yaw call fails, do not call
+pitch. Fail loud with that error.
+
+Do not pass this command's keys through unchanged. Do not pass
+`track_id`, `radar_name`, `monitor_name`, `yaw_degrees`, or
+`pitch_degrees` to rotate. Never send `yaw_bearing_name`,
+`yaw_motor_name`, `pitch_bearing_name`, `pitch_motor_name`,
+`yaw_rpm`, `pitch_rpm`, `yaw_tolerance_degrees`, or
+`pitch_tolerance_degrees` as child keys.
+
+Yaw child `opts`:
+
+- `target_degrees`: this command's `yaw_degrees`
+- `rpm`: this command's `yaw_rpm`
+- `bearing_name`: this command's `yaw_bearing_name` when that
+  value is a non-empty string; otherwise omit the key
+- `motor_name`: this command's `yaw_motor_name` when that value
+  is a non-empty string; otherwise omit the key
+- `tolerance_degrees`: this command's `yaw_tolerance_degrees`
+  when present as a finite number; otherwise omit the key
+
+Pitch child `opts`: the same shape with `pitch_degrees`,
+`pitch_rpm`, `pitch_bearing_name`, `pitch_motor_name`, and
+`pitch_tolerance_degrees`.
+
+If the two name pairs are omitted, rotate's own discovery
+applies. A gun with two swivels and two motors cannot discover
+"exactly one". Callers name the axes. This command does not
+invent a second discovery pass.
 
 Do not call `read_swivel_bearing_angle` or
 `set_electric_motor_speed` from this function. Those are rotate's
 callees.
 
-Do not wait for both axes to land inside a tolerance beyond what
-rotate already does. One aim invocation is one pair of rotate
-calls. Settle policy stays on rotate.
+This command is one dual-axis control tick, not a settle loop.
+One invocation is the live-track gate, one yaw rotate, one pitch
+rotate, then return. Do not `while` until both axes are inside
+tolerance. Do not `sleep`. Rotate is already one one-axis step
+with no wait. After one tick the bearings may still be moving.
+Engage uses this step's `on_target` report. This command owns
+one dual-axis closed-loop step. It does not own a wait-until-
+landed loop. Ticket 5's "aim owns the outer loop" means rotate
+is not the looper. Repeated aim happens because Engage's
+operator or bytecode loop re-calls Engage.
+
+Bind both rotate success returns. Each is one Lua number,
+`error_degrees`: signed shortest-path leftover from stored servo
+target to commanded angle, including leftover inside tolerance.
+Do not coerce them. Do not call `getTargetAngle` to rebuild
+them. Visual or physics pose is not a substitute.
+
+After both rotate calls succeed:
+
+`on_target` is true iff `abs(yaw error_degrees)` is less than or
+equal to the yaw resolved tolerance and `abs(pitch
+error_degrees)` is less than or equal to the pitch resolved
+tolerance.
+
+Resolved tolerance is the parent per-axis value when forwarded,
+else rotate's default `1`. Both axes must pass. One axis inside
+and one leftover outside is false. Motor 0 on an axis is that
+same inequality, not a second signal. False `on_target` is still
+aim success: the live target was confirmed and both rotates ran.
+Engage skips fire. Do not fail loud on false.
 
 Do not fire. Fire Rotating Barrel is ticket 4.
+
+### Kinetic Speed From The Caller
+
+Aim does not invent kinetic speed. The caller who wired the
+motors passes signed per-axis `yaw_rpm` and `pitch_rpm`. Sign is
+rotate's convention: the magnitude whose sign increases that
+bearing's stored servo field. The two signs may differ. Optional
+per-axis `yaw_tolerance_degrees` / `pitch_tolerance_degrees` are
+forwarded when present; otherwise rotate keeps default `1`. No
+shared parent `rpm`. No probe.
 
 ### Call Shape
 
 Lua: `bearing_turret.aim_turret_at_target(opts)`. Arity 1. `opts`
-is a table. Success is no return values. Extra arguments, a
-non-table `opts`, unknown keys, non-finite yaw or pitch, or a
-present `track_id` that is not a string fail loud before any
-child call.
+is a table. Success is one Lua table with boolean `on_target`.
+Extra arguments, a non-table `opts`, unknown keys, non-finite
+yaw or pitch, missing or non-finite `yaw_rpm` or `pitch_rpm`, or
+a present `track_id` that is not a string fail loud before any
+child call. Present non-finite `yaw_tolerance_degrees` or
+`pitch_tolerance_degrees` fail the same way.
+
+Allowed parent `opts` keys: `yaw_degrees`, `pitch_degrees`,
+`yaw_rpm`, `pitch_rpm`, `track_id`, `radar_name`,
+`monitor_name`, `yaw_bearing_name`, `pitch_bearing_name`,
+`yaw_motor_name`, `pitch_motor_name`,
+`yaw_tolerance_degrees`, `pitch_tolerance_degrees`.
 
 `read_radar_tracks` and rotate both yield (`mainThread`
 peripherals on the children). The caller must tolerate tick
@@ -179,10 +245,11 @@ waits.
 ### Why This Split
 
 Who: the gun computer. What: apply a solution to both bearings
-while a radar target is live. When: a solution exists. Where:
-motors on the two Simulated swivels. Why: radar controllers and
-CBC `setTargetAngles` aim other mounts; Going Ballistic has no
-Lua API; rotate is one axis; this command is the two-axis apply.
+while a radar target is live, one dual-axis tick, report
+`on_target`. When: a solution exists. Where: motors on the two
+Simulated swivels. Why: radar controllers and CBC
+`setTargetAngles` aim other mounts; Going Ballistic has no Lua
+API; rotate is one axis; this command is the two-axis apply.
 
 ## What Would Falsify This
 
