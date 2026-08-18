@@ -14,11 +14,11 @@ Repo: https://github.com/Gleeglor/cc-bearing-turret
 
 ## Vestibule
 
-- #4 Fire Rotating Barrel
+(none)
 
 ## Docs
 
-(none)
+- #4 Fire Rotating Barrel
 
 ## Code
 

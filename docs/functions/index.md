@@ -17,6 +17,10 @@ turret. Product features stay out of this catalog.
   `setSpeed` when `getSpeed` already equals the request; out-of-range
   requests always write
   (`bearing_turret.set_electric_motor_speed`)
+- [Fire Rotating Barrel](/functions/basic/fire-rotating-barrel) -
+  pulse analog strength 1 for two game ticks on a Create Big Cannons
+  mount fire face, then 0
+  (`bearing_turret.fire_rotating_barrel`)
 
 ## Advanced
 

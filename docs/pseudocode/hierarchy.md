@@ -230,6 +230,11 @@ Bearings turn from kinetic input. This is the write primitive.
 [#4](https://github.com/Gleeglor/cc-bearing-turret/issues/4).
 Basic. On the ainterface this ticket.
 
+- [Functional](/functions/basic/fire-rotating-barrel)
+- [Technical](/functions/basic/fire-rotating-barrel.technical)
+- [Overview](/research/4/overview)
+- [Paper](/research/4/paper)
+
 ### Who
 
 ComputerCraft program on the gun computer.

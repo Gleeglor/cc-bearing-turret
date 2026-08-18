@@ -62,6 +62,14 @@ export default defineConfig({
             text: "Set Electric Motor Speed Technical",
             link: "/functions/basic/set-electric-motor-speed.technical",
           },
+          {
+            text: "Fire Rotating Barrel",
+            link: "/functions/basic/fire-rotating-barrel",
+          },
+          {
+            text: "Fire Rotating Barrel Technical",
+            link: "/functions/basic/fire-rotating-barrel.technical",
+          },
         ],
       },
     ],
