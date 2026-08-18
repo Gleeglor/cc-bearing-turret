@@ -224,6 +224,32 @@ expect_error("empty pitch_motor_name", function()
   engage_simulated_bearing_turret(opts)
 end, "pitch_motor_name must be a non-empty string")
 
+expect_error("missing yaw_motor_name", function()
+  local opts = base_opts()
+  opts.yaw_motor_name = nil
+  engage_simulated_bearing_turret(opts)
+end, "yaw_motor_name is required")
+
+expect_error("yaw_motor_name not string", function()
+  local opts = base_opts()
+  opts.yaw_motor_name = 8
+  engage_simulated_bearing_turret(opts)
+end, "yaw_motor_name must be a string, got number")
+
+expect_error("empty yaw_motor_name", function()
+  local opts = base_opts()
+  opts.yaw_motor_name = ""
+  engage_simulated_bearing_turret(opts)
+end, "yaw_motor_name must be a non-empty string")
+
+expect_error("wrap table is not opts", function()
+  engage_simulated_bearing_turret({
+    getTargetAngle = function()
+      return 0
+    end,
+  })
+end, "unknown input 'getTargetAngle'")
+
 expect_error("equal bearing names", function()
   local opts = base_opts()
   opts.pitch_bearing_name = "yaw_swivel"
@@ -254,11 +280,35 @@ expect_error("missing muzzle_x", function()
   engage_simulated_bearing_turret(opts)
 end, "muzzle_x is required")
 
+expect_error("missing muzzle_y", function()
+  local opts = base_opts()
+  opts.muzzle_y = nil
+  engage_simulated_bearing_turret(opts)
+end, "muzzle_y is required")
+
+expect_error("missing muzzle_z", function()
+  local opts = base_opts()
+  opts.muzzle_z = nil
+  engage_simulated_bearing_turret(opts)
+end, "muzzle_z is required")
+
 expect_error("missing projectile_mass_kg", function()
   local opts = base_opts()
   opts.projectile_mass_kg = nil
   engage_simulated_bearing_turret(opts)
 end, "projectile_mass_kg is required")
+
+expect_error("missing powder_mass_kg", function()
+  local opts = base_opts()
+  opts.powder_mass_kg = nil
+  engage_simulated_bearing_turret(opts)
+end, "powder_mass_kg is required")
+
+expect_error("missing charge_length_meters", function()
+  local opts = base_opts()
+  opts.charge_length_meters = nil
+  engage_simulated_bearing_turret(opts)
+end, "charge_length_meters is required")
 
 expect_error("missing barrel_length_meters", function()
   local opts = base_opts()
@@ -332,10 +382,30 @@ expect_error("dofile non-table compute", function()
   engage_simulated_bearing_turret(base_opts())
 end, "missing command 'compute_ballistic_aim'")
 
+expect_error("missing function compute", function()
+  child_files["compute_ballistic_aim.lua"] = {}
+  engage_simulated_bearing_turret(base_opts())
+end, "missing command 'compute_ballistic_aim'")
+
+expect_error("dofile non-table aim", function()
+  child_files["aim_turret_at_target.lua"] = "nope"
+  engage_simulated_bearing_turret(base_opts())
+end, "missing command 'aim_turret_at_target'")
+
 expect_error("missing function aim", function()
   child_files["aim_turret_at_target.lua"] = {}
   engage_simulated_bearing_turret(base_opts())
 end, "missing command 'aim_turret_at_target'")
+
+expect_error("dofile non-table fire", function()
+  child_files["fire_rotating_barrel.lua"] = false
+  engage_simulated_bearing_turret(base_opts())
+end, "missing command 'fire_rotating_barrel'")
+
+expect_error("missing function fire", function()
+  child_files["fire_rotating_barrel.lua"] = {}
+  engage_simulated_bearing_turret(base_opts())
+end, "missing command 'fire_rotating_barrel'")
 
 run("loads all three before any call", function()
   engage_simulated_bearing_turret(base_opts())
@@ -381,6 +451,9 @@ run("aim receives parent rpm and compute degrees", function()
   expect_equal("yaw_rpm", aim_opts.yaw_rpm, 16)
   expect_equal("pitch_rpm", aim_opts.pitch_rpm, -8)
   expect_equal("yaw bearing", aim_opts.yaw_bearing_name, "yaw_swivel")
+  expect_equal("pitch bearing", aim_opts.pitch_bearing_name, "pitch_swivel")
+  expect_equal("yaw motor", aim_opts.yaw_motor_name, "yaw_motor")
+  expect_equal("pitch motor", aim_opts.pitch_motor_name, "pitch_motor")
   expect_equal("no extra", aim_opts.extra, nil)
   expect_equal("no tof", aim_opts.time_of_flight_ticks, nil)
   expect_equal("fire side", fire_calls[1].side, "back")
@@ -397,8 +470,11 @@ run("empty optional strings omitted", function()
   opts.projectile_kind = ""
   engage_simulated_bearing_turret(opts)
   expect_equal("compute radar omitted", compute_calls[1].radar_name, nil)
+  expect_equal("compute monitor omitted", compute_calls[1].monitor_name, nil)
   expect_equal("compute traj omitted", compute_calls[1].trajectory, nil)
+  expect_equal("compute kind omitted", compute_calls[1].projectile_kind, nil)
   expect_equal("aim radar omitted", aim_calls[1].radar_name, nil)
+  expect_equal("aim monitor omitted", aim_calls[1].monitor_name, nil)
   expect_equal("aim track_id omitted", aim_calls[1].track_id, nil)
   expect_equal("fire relay omitted", fire_calls[1].relay_name, nil)
 end)
@@ -415,6 +491,9 @@ run("optional keys forwarded when present", function()
   opts.track = { id = "UUID-1" }
   engage_simulated_bearing_turret(opts)
   expect_equal("compute radar", compute_calls[1].radar_name, "dish_1")
+  expect_equal("compute monitor", compute_calls[1].monitor_name, "mon_1")
+  expect_equal("aim radar", aim_calls[1].radar_name, "dish_1")
+  expect_equal("aim monitor", aim_calls[1].monitor_name, "mon_1")
   expect_equal("compute trajectory", compute_calls[1].trajectory, "high")
   expect_equal("compute max_ticks", compute_calls[1].max_ticks, 100)
   expect_equal("compute track id", compute_calls[1].track.id, "UUID-1")
