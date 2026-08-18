@@ -15,17 +15,18 @@ split this tree into sibling repos.
   - bearing_turret.fire_rotating_barrel
 
 Leaves are ainterface commands. On `ainterface.json` now:
-`bearing_turret.read_radar_tracks` and
-`bearing_turret.read_swivel_bearing_angle`. Other basic leaves
+`bearing_turret.read_radar_tracks`,
+`bearing_turret.read_swivel_bearing_angle`, and
+`bearing_turret.set_electric_motor_speed`. Other basic leaves
 join the contract when their tickets enter the Vestibule.
 Non-leaf names are this topic's functions. They are not other
 topics. They join the ainterface when their own tickets enter the
 Vestibule.
 
 Lua call this ticket:
-`bearing_turret.read_swivel_bearing_angle(opts)`. `opts` is
-omitted, nil, or a table of ainterface input keys, not a
-positional name. Success is one Lua number in degrees.
+`bearing_turret.set_electric_motor_speed(opts)`. `opts` is a
+table of ainterface input keys. `rpm` is required. Success is no
+return values.
 
 ## bearing_turret.engage_simulated_bearing_turret
 
@@ -195,7 +196,12 @@ Closed-loop rotate needs the angle. Native wrap is read-only.
 ## bearing_turret.set_electric_motor_speed
 
 [#3](https://github.com/Gleeglor/cc-bearing-turret/issues/3).
-Basic. Not yet on the ainterface.
+Basic. On the ainterface this ticket.
+
+- [Functional](/functions/basic/set-electric-motor-speed)
+- [Technical](/functions/basic/set-electric-motor-speed.technical)
+- [Overview](/research/3/overview)
+- [Paper](/research/3/paper)
 
 ### Who
 
